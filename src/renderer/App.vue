@@ -16,32 +16,29 @@
           <div class="sidebar-sticky">
             <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link active" href="*">
+                <router-link :to="{ name: 'home'}" class="nav-link" >
                   <home-icon class="custom-class"></home-icon>
                   Dashboard
-                </a>
+                </router-link>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <router-link :to="{ name: 'location'}" class="nav-link" >
                   <dollar-sign-icon class="custom-class"></dollar-sign-icon>
                   Locações
-                </a>
+                </router-link>
               </li>
-
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <router-link :to="{ name: 'rooms'}" class="nav-link" >
                   <dollar-sign-icon class="custom-class"></dollar-sign-icon>
-                  Locações
-                </a>
+                  Quartos
+                </router-link>
               </li>
-
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <router-link :to="{ name: 'location'}" class="nav-link" >
                   <dollar-sign-icon class="custom-class"></dollar-sign-icon>
-                  Locações
-                </a>
+                  Histórico de locações
+                </router-link>
               </li>
-
             </ul>
 
           </div>
