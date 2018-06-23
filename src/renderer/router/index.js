@@ -12,8 +12,13 @@ export default new Router({
     },
     {
       path: '/location',
-      name:'locacao',
+      name:'location',
       component: require('@/components/location/Location').default
-    }
+    },
+    {
+      path: '/rooms',
+      name:'rooms',
+      component: require('@/components/rooms/Rooms').default
+    },
   ]
 })
