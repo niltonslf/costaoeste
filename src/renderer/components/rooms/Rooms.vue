@@ -84,16 +84,16 @@ export default {
     * update list of rooms
     */
     updateRoomsList(data){
-      this.showRoomList();
-      console.log("Updated product list");
+      this.loadRoomList();
+      console.log("Updated room list");
     },
 
     /*
     * Load items from database and show table
     */
-    showRoomList(){
+    loadRoomList(){
       this.rooms = this.roomCollection.chain().simplesort('number').data();
-      console.log("Lista de produtos");
+      console.log("Room list");
       console.log(this.rooms);
     },
     /**
@@ -142,7 +142,7 @@ export default {
 
   created(){
 
-    this.showRoomList();
+    this.loadRoomList();
 
   },
 }

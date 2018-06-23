@@ -20,5 +20,10 @@ export default new Router({
       name:'rooms',
       component: require('@/components/rooms/Rooms').default
     },
+    {
+      path: '/room',
+      name:'room',
+      component: require('@/components/rooms/RoomDetail').default
+    },
   ]
 })

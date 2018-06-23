@@ -1,22 +1,22 @@
 <template lang="html">
   <div :class="'card ' + status">
     <div class="card-body">
-      <h5 class="card-title">Quarto: 01</h5>
+      <h5 class="card-title">Quarto: {{number}}</h5>
       <div class="card-text">
         <ul>
-          <li><b>Hospede:</b> João da silva</li>
-          <li><b>Entrada:</b> 15/04/2018</li>
-          <li><b>Saida prevista:</b> 20/04/2018</li>
+          <li><b>Hospede:</b>  {{guest}}</li>
+          <li><b>Entrada:</b>  {{checkin}}</li>
+          <li><b>Saida prevista:</b>  {{checkout}}</li>
         </ul>
       </div>
-      <router-link :to="{ name: 'location'}" class="btn btn-sm btn-primary">Ver locação</router-link>
+      <router-link :to="{ name: 'room'}" class="btn btn-sm btn-primary">Ver locação</router-link>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  props: ['status'],
+  props: ['status','number','guest','checkin','checkout'],
   data(){
     return {
     }
