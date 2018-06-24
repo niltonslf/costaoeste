@@ -1,46 +1,41 @@
 <template lang="html">
-  <div class="">
+  <v-layout row wrap>
 
-    <div class="row">
-      <div class="col-md-6 d-flex justify-content-between">
-        <a href="#addRoom" class="btn btn-success" @click="btnAddRoom">Adicionar quarto</a>
-      </div>
-    </div>
+    <v-flex xs12>
+      <v-btn color="info" @click="btnAddRoom">Adicionar quarto</v-btn>
+    </v-flex>
 
-    <create-room v-if="showForm" @updateList="updateRoomsList" @cancel="btnAddRoom"></create-room>
+    <v-flex xs12>
+      <create-room v-if="showForm" @updateList="updateRoomsList" @cancel="btnAddRoom"></create-room>
+    </v-flex>
 
-    <div class="row mt-4">
-      <div class="col col-12 alert alert-secondary">
-          <p>Realizar uma busca:</p>
-          <input type="text" class="form-control" placeholder="Filtrar lista" v-model="filterTerm">
-      </div>
-    </div>
 
-    <section class="row mt-4">
-      <table class="table">
-        <thead>
-          <tr>
-            <th width="50"><a href="#" @click="sort($event,'$loki')">#</a></th>
-            <th width="50"><a href="#" @click="sort($event,'number')">Número</a></th>
-            <th><a href="#" @click="sort($event,'dailyPrice')">Diária</a></th>
-            <th width="200">Ações</th>
-          </tr>
-        </thead>
+    <v-flex xs12>
+      <v-text-field  v-model="filterTerm" :counter="200"  label="Realizar uma busca:"></v-text-field>
 
-        <tbody>
-          <tr v-for="(room, index) in list">
-            <td>{{room.$loki}}</td>
-            <td>{{room.number}}</td>
-            <td>{{room.dailyPrice}}</td>
-            <td>
-              <a href="#" class="btn btn-primary">Edit</a>
-              <a href="#" @click="removeRoom(index,room)" class="btn btn-danger">Deletar</a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
-  </div>
+      <v-data-table
+      :headers="headers"
+      :items="rooms"
+      hide-actions
+      class="elevation-1"
+      >
+      <template slot="items" slot-scope="props">
+        <td class="text-xs-left">{{ props.item.$loki }}</td>
+        <td class="text-xs-left">{{ props.item.number }}</td>
+        <td class="text-xs-left">{{ props.item.dailyPrice }}</td>
+        <td class="text-xs-left">
+          <v-btn icon class="mx-0" @click="editRoom(props.item)">
+            <v-icon color="teal">edit</v-icon>
+          </v-btn>
+          <v-btn icon class="mx-0" @click="removeRoom(props.item)">
+            <v-icon color="pink">delete</v-icon>
+          </v-btn>
+        </td>
+      </template>
+    </v-data-table>
+  </v-flex>
+
+</v-layout>
 </template>
 
 <script>
@@ -57,12 +52,19 @@ export default {
 
   data(){
     return{
-      roomCollection: database().getCollection("rooms"),
+      roomCollection: database().rooms,
       rooms:[],
       showForm: false,
       sortProperty: "id",
       sortDirection: "desc",
       filterTerm: "",
+
+      headers: [
+        { text: '#', value: '$loki',  align: 'center',width: "50"},
+        { text: 'Quarto', value: 'room', sortable: true,},
+        { text: 'Preço diára', value: 'dailyPrice',width: "130"},
+        { text: 'Ações', value: 'action' , sortable: false, align:'center', width: "130"},
+      ],
     }
   },
 
@@ -106,15 +108,14 @@ export default {
     /*
     * Remove room from list and database
     */
-    removeRoom(index,object){
-      //remove item from list
-      this.rooms.splice(index,1);
-      console.log("Item removed from list");
-
+    removeRoom(object){
       // remove item from database
       let result = this.roomCollection.findOne({
         '$loki': parseInt(object.$loki)
       });
+
+      //Remove item from array
+      this.rooms.splice(this.rooms.indexOf(object),1);
       this.roomCollection.remove(result);
       console.log("Item removed from database:");
     }

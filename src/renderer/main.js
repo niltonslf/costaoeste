@@ -1,15 +1,23 @@
 import Vue from 'vue'
 import axios from 'axios'
+import Vuetify from 'vuetify'
+
+Vue.use(Vuetify)
 
 import App from './App'
 import router from './router'
 import store from './store'
 
-import 'jquery'
-import 'bootstrap'
-import 'bootstrap/dist/css/bootstrap.min.css'
-// import './connection.js'
+// import 'jquery'
+// import 'bootstrap'
+// import 'bootstrap/dist/css/bootstrap.min.css'
 
+//  UI
+import 'vuetify/dist/vuetify.min.css' // Ensure you are using css-loader
+import 'material-design-icons-iconfont/dist/material-design-icons.css' // Ensure you are using css-loader
+
+//Database
+import {database} from './connection';
 
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))

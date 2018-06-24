@@ -1,33 +1,103 @@
 <template lang="html">
-  <section>
-    <h2 class="h3">Quarto: {{room.number}}</h2>
 
-    <div class="">
-      <span>Preço diária: {{room.dailyPrice}}</span>
-    </div>
+  <v-layout row wrap>
 
+    <v-flex xs4>
+      <v-card>
+        <v-card-media
+        class="white--text"
+        height="150px"
+        src="https://vuetifyjs.com/static/doc-images/cards/docks.jpg" >
+        <v-container fill-height fluid>
+          <v-layout fill-height>
+            <v-flex xs12 align-end flexbox>
+              <span class="display-1">Quarto {{room.number}}</span>
+            </v-flex>
+          </v-layout>
+        </v-container>
+      </v-card-media>
 
-    <div class="">
-      <h3>Reservas</h3>
+      <v-card-title>
 
-      <div class="col-md-6 alert-secondary">
+        <v-flex xs12>
+          <v-list two-line subheader >
+            <v-subheader>Informações do quarto</v-subheader>
+            <v-list-tile>
+              <v-list-tile-action>
+                <v-icon color="indigo">attach_money</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>Preço dia</v-list-tile-title>
+                <v-list-tile-sub-title>{{room.dailyPrice}}</v-list-tile-sub-title>
+              </v-list-tile-content>
+            </v-list-tile>
 
-      </div>
+            <v-divider></v-divider>
 
-    </div>
+            <v-list-tile>
+              <v-list-tile-action>
+                <v-icon color="indigo">today</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>Status</v-list-tile-title>
+                <v-list-tile-sub-title>{{room.status}}</v-list-tile-sub-title>
+              </v-list-tile-content>
+            </v-list-tile>
+          </v-list>
 
-  </section>
+        </v-flex>
+
+      </v-card-title>
+    </v-card>
+  </v-flex>
+
+  <v-flex xs7 offset-xs1>
+    <reserve-add :object="room"></reserve-add>
+  </v-flex>
+
+  <v-flex xs12 mt-4>
+    <reserve-list></reserve-list>
+  </v-flex>
+
+</v-layout>
+
 </template>
 
 <script>
+import {database} from '../../connection'
+import  ReserveList from '../reservations/ReserveList.vue'
+import  ReserveAdd from '../reservations/ReserveAdd.vue'
+
 export default {
+
+  components:{
+    ReserveList,
+    ReserveAdd
+  },
+
   data(){
     return{
-      room:{
-        number:'0',
-        dailyPrice:'R$ 20,00',
-      }
+      roomCollection: database().rooms,
+      roomId: 0,
+      room:{},
     }
+  },
+
+  created(){
+    try {
+      this.roomId = this.$router.props.roomId;
+      /*
+      * Load room from database
+      */
+      this.room = this.roomCollection.findOne({'$loki': this.roomId});
+      this.room.status = 'alugado'; // add status attribute
+      // DEBUG:
+      console.log("Room loaded");
+      console.log(this.room);
+    } catch (e) {
+      this.$router.push({name:'home'});
+    }
+
   }
 }
 </script>

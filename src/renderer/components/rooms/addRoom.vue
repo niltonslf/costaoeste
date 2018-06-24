@@ -1,19 +1,30 @@
 <template lang="html">
-  <form class="row mt-4 alert alert-success" @submit.prevent="addRoom">
-    <div class="form-group col-sm-4">
-      <label for="number">Número do quarto</label>
-      <input type="text" class="form-control" id="number" v-model="room.number">
-    </div>
-    <div class="form-group col-sm-4">
-      <label for="preco">Diária</label>
-      <input type="text" class="form-control" id="preco" v-model="room.dailyPrice">
-    </div>
+    <v-layout row wrap py-5>
 
-    <div class="form-group col-sm-4">
-      <input type="submit" value="Inserir" class="btn btn-primary mt-4">
-      <a class="btn btn-danger text-white mt-4" @click="cancel">Cancelar</a>
-    </div>
-  </form>
+      <v-flex xs4x>
+        <v-text-field
+        v-model="room.number"
+        :rules="nameRules"
+        :counter="30"
+        label="Número do quarto"
+        required
+        ></v-text-field>
+      </v-flex>
+
+      <v-flex xs3>
+        <v-text-field
+        v-model="room.dailyPrice"
+        :counter="30"
+        label="Preço da diária"
+        required
+        ></v-text-field>
+      </v-flex>
+
+      <v-flex xs5>
+        <v-btn @click.prevent="addRoom">Inserir</v-btn>
+        <v-btn @click.prevent="cancel">Cancelar</v-btn>
+      </v-flex>
+    </v-layout>
 </template>
 
 <script>
@@ -23,19 +34,16 @@ export default {
 
   data(){
     return {
-      room: {
-        // $loki:"", // this is used to show id after be inserted
-        number: "",
-        dailyPrice: 20, // Default daily price
-      },
+      room: {},
     }
   },
   methods:{
     addRoom(){
-      let roomCollection = database().getCollection("rooms");
+      let roomCollection = database().rooms;
       let result = roomCollection.insert({
         number: this.room.number,
         dailyPrice:  this.room.dailyPrice,
+        reserves:[],  // this array will receive room reserves
       });
       console.log("Quarto adicionado!");
       this.room.$loki = result.$loki;

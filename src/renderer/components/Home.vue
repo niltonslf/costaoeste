@@ -1,31 +1,44 @@
 <template>
-  <div class="d-flex justify-content-between flex-wrap align-items-center">
 
-    <card v-for="room in rooms"
-    v-bind:status="room.status"
-    v-bind:number="room.number"
-    ></card>
+  <v-layout row wrap>
 
-  </div>
+    <v-flex xs3 pa-2 v-for="room in rooms">
+      <v-card color="green darken-2" class="white--text">
+        <v-card-title primary-title>
+          <div class="headline">Quarto: {{room.number}}</div>
+          <div>Hóspede: João da silva</div>
+          <div>Checkin: 10/10/2018</div>
+          <div>Checkout: 20/10/2018</div>
+        </v-card-title>
+        <v-card-actions>
+          <v-btn depressed small @click.native="gotoPage('room',room.$loki)">Ver quarto</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-flex>
+
+  </v-layout>
+
 </template>
 
 <script>
-import {database} from '../connection'
-import Card from './card/Card.vue';
+import {database} from '../connection';
 
 export default{
-  components: {
-    Card,
-  },
 
   data(){
     return{
-      roomCollection: database().getCollection("rooms"),
-      rooms:[]
+      roomCollection: database().rooms,
+      rooms:[],
     }
   },
 
   methods:{
+    gotoPage(routerName,roomId){
+      this.$router.props={roomId: roomId};
+      this.$router.replace(routerName);
+      console.log(this.$router);
+    },
+
     /*
     * Load items from database and show table
     */
@@ -39,6 +52,7 @@ export default{
   computed:{
 
   },
+
   created(){
     this.loadRoomList();
   }
