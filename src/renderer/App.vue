@@ -36,6 +36,13 @@
 <script>
 export default {
   data: () => ({
+
   }),
+
+  methods:{
+    gotoPage(routerName){
+      this.$router.replace(routerName);
+    }
+  }
 }
 </script>
