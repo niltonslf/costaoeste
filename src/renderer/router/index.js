@@ -8,12 +8,10 @@ export default new Router({
     {
       path: '/',
       name: 'home',
-      component: require('@/components/Home').default
-    },
-    {
-      path: '/rooms',
-      name:'rooms',
-      component: require('@/components/rooms/Rooms').default
+      component: require('@/components/Home').default,
+      meta:{
+        reload: false
+      },
     },
     {
       path: '/room',

@@ -4,8 +4,6 @@
       <v-flex xs4x>
         <v-text-field
         v-model="room.number"
-        :rules="nameRules"
-        :counter="30"
         label="Número do quarto"
         required
         ></v-text-field>
@@ -18,11 +16,6 @@
         label="Preço da diária"
         required
         ></v-text-field>
-      </v-flex>
-
-      <v-flex xs5>
-        <v-btn @click.prevent="addRoom">Inserir</v-btn>
-        <v-btn @click.prevent="cancel">Cancelar</v-btn>
       </v-flex>
     </v-layout>
 </template>
@@ -50,9 +43,6 @@ export default {
       this.$emit('updateList'); // emit this command to update room list
     },
 
-    cancel(){
-      this.$emit('cancel');
-    },
   }
 }
 </script>

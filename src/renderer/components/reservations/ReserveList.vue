@@ -1,9 +1,6 @@
 <template lang="html">
   <v-layout column wrap>
     <v-subheader class="title">Reservas</v-subheader>
-
-
-
     <v-card>
       <v-list two-line v-for="location in locations">
         <v-list-tile @click="">
@@ -51,6 +48,17 @@
         <v-divider></v-divider>
       </v-list>
 
+      <!-- Empty location list -->
+      <v-list two-line v-if="locations == false">
+        <v-list-tile>
+          <v-list-tile-action>
+            <v-icon color="blue">error</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Sem reservas para quarto.</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+      </v-list>
 
     </v-card>
 
@@ -63,6 +71,7 @@
 import {database} from '../../connection'
 
 export default {
+  props:['roomId'],
   data(){
     return{
       collection: database().location,
@@ -75,7 +84,7 @@ export default {
     * Load items from database and show table
     */
     loadData(){
-      this.locations = this.collection.chain().simplesort('$loki',true).data();
+      this.locations = this.collection.find({'roomId': this.roomId});
       console.log("Locations list");
       console.log(this.locations);
     },

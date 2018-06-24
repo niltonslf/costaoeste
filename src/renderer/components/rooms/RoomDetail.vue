@@ -56,7 +56,7 @@
   </v-flex>
 
   <v-flex xs12 mt-4>
-    <reserve-list ref="list"></reserve-list>
+    <reserve-list ref="list" :roomId="room.$loki"></reserve-list>
   </v-flex>
 
 </v-layout>
