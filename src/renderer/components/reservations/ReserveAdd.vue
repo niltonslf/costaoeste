@@ -99,52 +99,65 @@ export default {
   props:['object'],
 
   data: () => ({
-    roomCollection: database().rooms,
+    collection: database().location,
     //Data picker
     pickerCheckin: false,
     pickerCheckout: false,
 
     // Reserve data
-    reserve:{
-      checkinDate:null,
-      checkoutDate:null,
-      status: 'vago',
-      isChecked:false,
-      guest:{},
-    },
+    reserve:{},
     // Guesta data
-    guest:{
-      name:'',
-      tel:'',
-      cpf:'',
-    },
+    guest:{},
   }),
 
   methods:{
+    /*
+    * Save data into database
+    */
     submit(){
       console.log("Salve reserve");
-      // Join data in a sigle object
-
+      // Put guest data into reserve object
       this.reserve.guest = this.guest;
-      let reserveObject = this.reserve;
-
+      // DEBUG:
       console.log("Object updated");
-      console.log(reserveObject);
+      console.log(this.reserve);
       console.log("Save into database");
-      // Get item to update
-      let result = this.roomCollection.chain()
-      .find({'$loki': this.object.$loki}).update(function(room){
-        // add reserve object into room object
-        console.log(room.reserves);
-        room.reserves.splice(0,0,reserveObject);
+      let result = this.collection.insert({
+        checkinDate: this.reserve.checkinDate,
+        checkoutDate: this.reserve.checkoutDate,
+        status: 'vago',
+        isChecked:false,
+        guest: this.guest,
+        roomId: this.object.$loki,
       });
-      console.log("Object saved:");
+
+      this.clear(); // clear form
+      this.$emit('updateList'); // emit this command to update location list
+      // DEBUG:
+      console.log("Location inserted");
       console.log(result);
+
     },
+
+    /*
+    * Clear form data
+    */
     clear(){
-      alert('cancelar');
-    }
-  }
+      this.reserve ={
+        checkinDate:'',
+        checkoutDate:'',
+        status: 'vago',
+        isChecked:false,
+        guest:{},
+      }
+      this.guest = {
+        name:'',
+        tel:'',
+        cpf:'',
+      }
+    },
+
+  },
 }
 </script>
 

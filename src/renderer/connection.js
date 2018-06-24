@@ -5,7 +5,6 @@
 const loki = require('lokijs');
 var location = null;
 var rooms = null;
-var system = null;
 
 // We will use autoload (one time load at instantiation), and autosave  with 4 sec interval.
 var db = new loki('database.json', {

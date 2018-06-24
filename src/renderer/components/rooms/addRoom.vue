@@ -35,19 +35,19 @@ export default {
   data(){
     return {
       room: {},
+      collection: database().rooms,
     }
   },
   methods:{
     addRoom(){
-      let roomCollection = database().rooms;
-      let result = roomCollection.insert({
+      let result = this.collection.insert({
         number: this.room.number,
         dailyPrice:  this.room.dailyPrice,
         reserves:[],  // this array will receive room reserves
       });
       console.log("Quarto adicionado!");
       this.room.$loki = result.$loki;
-      this.$emit('updateList');
+      this.$emit('updateList'); // emit this command to update room list
     },
 
     cancel(){

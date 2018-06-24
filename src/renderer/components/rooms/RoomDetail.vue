@@ -52,11 +52,11 @@
   </v-flex>
 
   <v-flex xs7 offset-xs1>
-    <reserve-add :object="room"></reserve-add>
+    <reserve-add :object="room"  @updateList="updateList"></reserve-add>
   </v-flex>
 
   <v-flex xs12 mt-4>
-    <reserve-list></reserve-list>
+    <reserve-list ref="list"></reserve-list>
   </v-flex>
 
 </v-layout>
@@ -78,14 +78,17 @@ export default {
   data(){
     return{
       roomCollection: database().rooms,
-      roomId: 0,
+      roomId: this.$router.props.roomId,
       room:{},
     }
   },
-
+  methods:{
+    updateList(){
+      this.$refs.list.loadData(); // reload location list
+    },
+  },
   created(){
     try {
-      this.roomId = this.$router.props.roomId;
       /*
       * Load room from database
       */
