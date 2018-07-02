@@ -1,8 +1,8 @@
 <template lang="html">
 
   <v-layout row wrap>
-    <v-flex xs4>
-      <v-card>
+    <v-flex xs3>
+      <v-card  :color="(room.status == 'vacant' ? 'green' : room.status)">
         <v-card-media
         class="white--text"
         height="150px"
@@ -23,7 +23,7 @@
       <v-card-title>
 
         <v-flex xs12>
-          <v-list two-line subheader >
+          <v-list two-line subheader>
             <v-subheader>Informações do quarto</v-subheader>
             <v-list-tile>
               <v-list-tile-action>
@@ -42,8 +42,8 @@
                 <v-icon color="indigo">today</v-icon>
               </v-list-tile-action>
               <v-list-tile-content>
-                <v-list-tile-title>Status</v-list-tile-title>
-                <v-list-tile-sub-title>{{room.status}}</v-list-tile-sub-title>
+                <v-list-tile-title>Status de hoje</v-list-tile-title>
+                <v-list-tile-sub-title>{{(room.status == 'orange'? 'Reservado' : (room.status == 'red' ? 'Ocupado' : 'Livre'))}}</v-list-tile-sub-title>
               </v-list-tile-content>
             </v-list-tile>
           </v-list>
@@ -54,14 +54,11 @@
     </v-card>
   </v-flex>
 
-  <v-flex xs8 >
-    <reserve-add :object="room"  @updateList="updateList"></reserve-add>
-  </v-flex>
-
-  <v-flex xs12 mt-4>
+  <v-flex xs9 pl-4>
     <reserve-list ref="list" :roomId="room.$loki"></reserve-list>
   </v-flex>
 
+  <reserve-add :object="room"  @updateList="updateList"></reserve-add>
 </v-layout>
 
 </template>
@@ -104,22 +101,41 @@ export default {
         this.collection.remove(result);
         // Redirect to  home page
         this.$router.push('/');
-        // DEBUG:
-        console.log("Item removed from database:");
-
       }
-    }
+    },
+
+    /*
+    *  Find a host with roomId
+    */
+    findHost(roomId){
+      return this.hostsCollection.find({'roomId': roomId});
+    },
+
+    /*
+    * Verifiy if room is busy, reserved or free
+    */
+    checkRoomStatus(){
+      let today = new Date().toLocaleDateString('en-GB'); // date being verified
+      let date = today.split('/');
+      let todayFormated = date[2]+"-"+date[1]+"-"+date[0];
+
+      let host = this.findHost(this.room.$loki); // select the room that contains the id in host
+      host.map((hostItem)=>{
+        if (todayFormated >= hostItem.checkin && todayFormated <= hostItem.checkout) {
+          if (hostItem.isChecked == false) {
+            this.room.status = 'orange' // room reserved
+          }else{
+            this.room.status = 'red' // room busy
+          }
+        }
+      });
+    },
 
   },
   created(){
     try {
-      /*
-      * Load room from database
-      */
+      /* Load room from database */
       this.room = this.collection.findOne({'$loki': this.roomId});
-      // DEBUG:
-      console.log("Room loaded");
-      console.log(this.room);
     } catch (e) {
       this.$router.push({name:'home'});
     }

@@ -1,39 +1,39 @@
 <template lang="html">
   <v-layout column wrap>
-    <v-subheader class="title">Reservas</v-subheader>
+    <v-subheader class="title">Histórico</v-subheader>
     <v-card>
-      <v-list two-line v-for="location in hosts">
+      <v-list two-line v-for="host in hosts">
         <v-list-tile @click="">
           <v-list-tile-action>
-            <v-icon color="blue">hotel</v-icon>
+            <v-icon :color="host.color">hotel</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
 
-            <v-list-tile-title>{{location.guest.name}}</v-list-tile-title>
+            <v-list-tile-title>{{host.guest.name}}</v-list-tile-title>
 
             <v-list-tile-sub-title>
-              <v-icon color="blue" small>phone</v-icon>
-              {{location.guest.tel}}
+              <v-icon :color="host.color" small>phone</v-icon>
+              {{host.guest.tel}}
             </v-list-tile-sub-title>
 
           </v-list-tile-content>
 
           <v-list-tile-action>
-            <v-chip color="blue lighten-4" label small class="ml-0">
+            <v-chip :color="`${host.color} lighten-4`" label small class="ml-0">
               <v-icon small>today</v-icon>
-              Check-in:<b> {{ location.checkinDate }}</b>
+              Check-in:<b> {{ host.checkin }}</b>
             </v-chip>
           </v-list-tile-action>
 
           <v-list-tile-action>
-            <v-chip color="blue lighten-4" label small class="ml-0">
+            <v-chip :color="`${host.color} lighten-4`" label small class="ml-0">
               <v-icon small>today</v-icon>
-              Checkout:<b> {{ location.checkoutDate }}</b>
+              Checkout:<b> {{ host.checkout }}</b>
             </v-chip>
           </v-list-tile-action>
 
           <v-list-tile-action>
-            <v-btn icon class="mx-0" @click="editRoom(location)">
+            <v-btn icon class="mx-0" @click="editHosting(location)">
               <v-icon color="teal">edit</v-icon>
             </v-btn>
           </v-list-tile-action>
@@ -76,18 +76,24 @@ export default {
     return{
       collection: database().hosts,
       hosts:[],
-      messages: [],
     }
   },
+
   methods:{
     /*
     * Load items from database and show table
     */
     loadData(){
       this.hosts = this.collection.find({'roomId': this.roomId});
-      console.log("Locations list");
-      console.log(this.hosts);
     },
+
+    /*
+    * Edit host
+    */
+    editHosting(object){
+
+    },
+
     /*
     * Remove room from list and database
     */
@@ -101,11 +107,40 @@ export default {
 
       //Remove item from array
       this.hosts.splice(this.hosts.indexOf(object),1);
-      console.log("Item removed from database:");
-    }
+    },
+
+    /*
+    *  Find a host with roomId
+    */
+    findHost(roomId){
+      return this.collection.find({'roomId': roomId});
+    },
+
+    /*
+    * Verifiy if room is busy, reserved or free
+    */
+    checkRoomStatus(){
+      let today = new Date().toLocaleDateString('en-GB'); // date being verified
+      let date = today.split('/');
+      let todayFormated = date[2]+"-"+date[1]+"-"+date[0];
+
+      let host = this.findHost(this.roomId); // select the room that contains the id in host
+      host.map((hostItem)=>{
+        if (todayFormated >= hostItem.checkin && todayFormated <= hostItem.checkout) {
+          if (hostItem.isChecked == false) {
+            hostItem.color = 'orange' // room reserved
+          }else{
+            hostItem.color = 'red' // room busy
+          }
+        }
+        console.log("List");
+        console.log(hostItem.color);
+      });
+    },
   },
   created(){
     this.loadData();
+    this.checkRoomStatus();
   }
 }
 </script>

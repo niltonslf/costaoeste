@@ -25,7 +25,6 @@
     </div>
 
     <v-btn fab bottom right color="pink" dark fixed @click.stop="dialog = !dialog">
-
       <v-icon>add</v-icon>
     </v-btn>
     <v-dialog v-model="dialog" width="800px">
@@ -92,15 +91,6 @@ export default{
       return this.hostsCollection.find({'roomId': roomId});
     },
 
-    /*
-    * Load items from database and show table
-    */
-    loadLocationList(){
-      this.hosts = this.hostsCollection;
-      console.log("hosts list loaded");
-      console.log(this.hosts);
-    },
-
     /**
     * Run and excute child method to save data into database
     */
@@ -114,40 +104,21 @@ export default{
     * Verifiy if room is busy, reserved or free
     */
     checkRoomStatus(){
-      this.loadLocationList();
-
       console.log("***Checking room status***");
-
       let today = new Date().toLocaleDateString('en-GB'); // date being verified
+      let date = today.split('/');
+      let todayFormated = date[2]+"-"+date[1]+"-"+date[0];
 
       this.rooms.map((room) => { //goes through the array of rooms comparing the hosts with that same room
         let host = this.findHost(room.$loki); // select the room that contains the id in host
         host.map((hostItem)=>{
-          let date = today.split('/');
-          let todayFormated = date[2]+"-"+date[1]+"-"+date[0];
-
-          console.log("++++++++++++++");
-          console.log(hostItem);
-          console.log("room id: " + hostItem.roomId);
-          console.log("Guest name: " + hostItem.guest.name);
-          console.log("Host check-in: " +hostItem.checkinDate);
-          console.log("Host check-in: " +hostItem.checkinDate);
-          console.log("Host check-out: " +hostItem.checkoutDate);
-          console.log("Today:" + todayFormated);
-          console.log("Has host? " + (todayFormated >= hostItem.checkinDate && today <= hostItem.checkoutDate));
-
-          if (todayFormated >= hostItem.checkinDate && todayFormated <= hostItem.checkoutDate) {
-            console.log("Checked: " + hostItem.isChecked);
-
+          if (todayFormated >= hostItem.checkin && todayFormated <= hostItem.checkout) {
             if (hostItem.isChecked == false) {
-              console.log("Quarto " + room.number + " reservado");
               room.status = 'orange' // room reserved
             }else{
-              console.log("Quarto " + room.number + " ocupado");
               room.status = 'red' // room busy
             }
           }
-
         });
       });
     }
