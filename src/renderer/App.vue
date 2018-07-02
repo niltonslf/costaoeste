@@ -8,7 +8,7 @@
       <v-btn icon @click="gotoPage('/')">
         <v-icon>home</v-icon>
       </v-btn>
-      <span class="hidden-sm-and-down">Hotel Costa oeste</span>
+      <span class="hidden-sm-and-down" @click="gotoPage('/home')">Hotel Costa oeste</span>
     </v-toolbar-title>
     <v-text-field
     flat
@@ -19,15 +19,24 @@
     ></v-text-field>
     <v-spacer></v-spacer>
 
+    <v-btn icon @click="gotoPage('/')">
+      <v-icon>home</v-icon>
+    </v-btn>
+
+    <v-btn icon @click="gotoPage('/')">
+      <v-icon>home</v-icon>
+    </v-btn>
+
     <v-btn icon>
       <v-icon>exit_to_app</v-icon>
     </v-btn>
   </v-toolbar>
 
   <v-content>
-    <v-container fluid >
+    <v-container fluid  class="full-height">
       <!--  Load pages -->
       <router-view></router-view>
+
     </v-container>
   </v-content>
 </v-app>
@@ -36,7 +45,6 @@
 <script>
 export default {
   data: () => ({
-
   }),
 
   methods:{
@@ -46,3 +54,9 @@ export default {
   }
 }
 </script>
+
+<style>
+  .full-height{
+    height: 100%;
+  }
+</style>

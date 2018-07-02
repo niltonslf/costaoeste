@@ -9,9 +9,11 @@ export default new Router({
       path: '/',
       name: 'home',
       component: require('@/components/Home').default,
-      meta:{
-        reload: false
-      },
+    },
+    {
+      path: '/home',
+      name: 'home2',
+      component: require('@/components/rooms/Rooms').default,
     },
     {
       path: '/room',

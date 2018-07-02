@@ -36,6 +36,7 @@ export default {
       let result = this.collection.insert({
         number: this.room.number,
         dailyPrice:  this.room.dailyPrice,
+        status: 'vacant',
         reserves:[],  // this array will receive room reserves
       });
       console.log("Quarto adicionado!");

@@ -61,7 +61,6 @@
         required></v-text-field>
       </v-flex>
 
-
       <v-flex xs6>
         <v-text-field
         name="phone"
@@ -99,7 +98,7 @@ export default {
   props:['object'],
 
   data: () => ({
-    collection: database().location,
+    collection: database().hosts,
     //Data picker
     pickerCheckin: false,
     pickerCheckout: false,
@@ -125,7 +124,6 @@ export default {
       let result = this.collection.insert({
         checkinDate: this.reserve.checkinDate,
         checkoutDate: this.reserve.checkoutDate,
-        status: 'vago',
         isChecked:false,
         guest: this.guest,
         roomId: this.object.$loki,
@@ -146,7 +144,6 @@ export default {
       this.reserve ={
         checkinDate:'',
         checkoutDate:'',
-        status: 'vago',
         isChecked:false,
         guest:{},
       }

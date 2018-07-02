@@ -1,31 +1,37 @@
 <template>
+  <v-layout row wrap class="full-height">
+    <div class="grid-container">
+      <div class="grid-item" v-for="room in rooms">
+        <v-card :color="(room.status == 'vacant' ? 'green' : room.status) +' darken-2'" class="pointer full-height white--text" @click.native="gotoPage('room',room.$loki)">
+          <v-card-title primary-title>
+            <h1 class="headline">
+              Quarto: {{room.number}}
+            </h1>
+            <span class="label">
+              <v-icon small>people</v-icon>
+              Hóspede: João da silva
+            </span>
+            <span class="label">
+              <v-icon small>today</v-icon>
+              Checkin: 10/10/2018
+            </span><br>
+            <span class="label">
+              <v-icon small>today</v-icon>
+              Checkout: 20/10/2018
+            </span>
+          </v-card-title>
+        </v-card>
+      </div>
+    </div>
 
-  <v-layout row wrap>
-
-    <v-flex xs3 pa-2 v-for="room in rooms">
-      <v-card color="green darken-2" class="white--text">
-        <v-card-title primary-title>
-          <div class="headline">Quarto: {{room.number}}</div>
-          <div>Hóspede: João da silva</div>
-          <div>Checkin: 10/10/2018</div>
-          <div>Checkout: 20/10/2018</div>
-        </v-card-title>
-        <v-card-actions>
-          <v-btn depressed small @click.native="gotoPage('room',room.$loki)">Ver quarto</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-flex>
-
-
-    <v-btn fab bottom right color="blue" dark fixed @click.stop="dialog = !dialog">
+    <v-btn fab bottom right color="pink" dark fixed @click.stop="dialog = !dialog">
 
       <v-icon>add</v-icon>
     </v-btn>
     <v-dialog v-model="dialog" width="800px">
       <v-card>
         <v-card-title
-        class="grey lighten-4 py-4 title"
-        >
+        class="grey lighten-4 py-4 title">
         Cadastrar quarto
       </v-card-title>
       <v-container grid-list-sm class="pa-4">
@@ -40,6 +46,7 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
+
 </v-layout>
 
 </template>
@@ -57,7 +64,10 @@ export default{
     return{
       dialog: false,
       collection:database().rooms,
+      hostsCollection:database().hosts,
       rooms:[],
+      hosts:[],
+
     }
   },
 
@@ -75,16 +85,72 @@ export default{
       this.rooms = this.collection.find({});
       console.log("Room list loaded");
       console.log(this.rooms);
+      this.checkRoomStatus();
     },
 
+    findHost(roomId){
+      return this.hostsCollection.find({'roomId': roomId});
+    },
+
+    /*
+    * Load items from database and show table
+    */
+    loadLocationList(){
+      this.hosts = this.hostsCollection;
+      console.log("hosts list loaded");
+      console.log(this.hosts);
+    },
+
+    /**
+    * Run and excute child method to save data into database
+    */
     submit(){
       this.$refs.form.addRoom(); // execute method to add data into database
       this.loadRoomList(); // reload room list
       this.dialog = false; // close modal
-    }
-  },
+    },
 
-  computed:{
+    /*
+    * Verifiy if room is busy, reserved or free
+    */
+    checkRoomStatus(){
+      this.loadLocationList();
+
+      console.log("***Checking room status***");
+
+      let today = new Date().toLocaleDateString('en-GB'); // date being verified
+
+      this.rooms.map((room) => { //goes through the array of rooms comparing the hosts with that same room
+        let host = this.findHost(room.$loki); // select the room that contains the id in host
+        host.map((hostItem)=>{
+          let date = today.split('/');
+          let todayFormated = date[2]+"-"+date[1]+"-"+date[0];
+
+          console.log("++++++++++++++");
+          console.log(hostItem);
+          console.log("room id: " + hostItem.roomId);
+          console.log("Guest name: " + hostItem.guest.name);
+          console.log("Host check-in: " +hostItem.checkinDate);
+          console.log("Host check-in: " +hostItem.checkinDate);
+          console.log("Host check-out: " +hostItem.checkoutDate);
+          console.log("Today:" + todayFormated);
+          console.log("Has host? " + (todayFormated >= hostItem.checkinDate && today <= hostItem.checkoutDate));
+
+          if (todayFormated >= hostItem.checkinDate && todayFormated <= hostItem.checkoutDate) {
+            console.log("Checked: " + hostItem.isChecked);
+
+            if (hostItem.isChecked == false) {
+              console.log("Quarto " + room.number + " reservado");
+              room.status = 'orange' // room reserved
+            }else{
+              console.log("Quarto " + room.number + " ocupado");
+              room.status = 'red' // room busy
+            }
+          }
+
+        });
+      });
+    }
   },
 
   created(){
@@ -94,5 +160,31 @@ export default{
 </script>
 
 <style lang="css" scoped="true">
+.headline{
+  width: 100%;
+}
 
+.label{
+  display: inline-block;
+  margin-bottom: 2px;
+}
+
+.pointer{
+  cursor: pointer;
+}
+.pointer:hover{
+  box-shadow: 0 0  4px 3px rgba(0,0,0,0.6);
+}
+
+.grid-container{
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  grid-column-gap: 15px;
+  grid-row-gap: 15px;
+  height: 100%;
+}
+
+.full-height{
+  height: 100% !important;
+}
 </style>

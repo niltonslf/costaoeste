@@ -2,7 +2,7 @@
   <v-layout column wrap>
     <v-subheader class="title">Reservas</v-subheader>
     <v-card>
-      <v-list two-line v-for="location in locations">
+      <v-list two-line v-for="location in hosts">
         <v-list-tile @click="">
           <v-list-tile-action>
             <v-icon color="blue">hotel</v-icon>
@@ -49,7 +49,7 @@
       </v-list>
 
       <!-- Empty location list -->
-      <v-list two-line v-if="locations == false">
+      <v-list two-line v-if="hosts == false">
         <v-list-tile>
           <v-list-tile-action>
             <v-icon color="blue">error</v-icon>
@@ -74,8 +74,8 @@ export default {
   props:['roomId'],
   data(){
     return{
-      collection: database().location,
-      locations:[],
+      collection: database().hosts,
+      hosts:[],
       messages: [],
     }
   },
@@ -84,9 +84,9 @@ export default {
     * Load items from database and show table
     */
     loadData(){
-      this.locations = this.collection.find({'roomId': this.roomId});
+      this.hosts = this.collection.find({'roomId': this.roomId});
       console.log("Locations list");
-      console.log(this.locations);
+      console.log(this.hosts);
     },
     /*
     * Remove room from list and database
@@ -100,7 +100,7 @@ export default {
       this.collection.remove(result);
 
       //Remove item from array
-      this.locations.splice(this.locations.indexOf(object),1);
+      this.hosts.splice(this.hosts.indexOf(object),1);
       console.log("Item removed from database:");
     }
   },

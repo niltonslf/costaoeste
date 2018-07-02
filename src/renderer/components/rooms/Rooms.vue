@@ -28,7 +28,7 @@
             <v-icon color="teal">edit</v-icon>
           </v-btn>
           <v-btn icon class="mx-0" @click="removeRoom(props.item)">
-            <v-icon color="pink">delete</v-icon>
+            <v-icon color="pink">dalete</v-icon>
           </v-btn>
         </td>
       </template>

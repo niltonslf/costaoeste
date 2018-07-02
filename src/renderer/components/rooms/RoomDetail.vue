@@ -1,22 +1,25 @@
 <template lang="html">
 
   <v-layout row wrap>
-
     <v-flex xs4>
       <v-card>
         <v-card-media
         class="white--text"
         height="150px"
-        src="https://vuetifyjs.com/static/doc-images/cards/docks.jpg" >
+        src="/src/renderer/assets/room.png">
         <v-container fill-height fluid>
           <v-layout fill-height>
-            <v-flex xs12 align-end flexbox>
+            <v-flex xs11 align-end flexbox>
               <span class="display-1">Quarto {{room.number}}</span>
+            </v-flex>
+            <v-flex>
+              <v-btn icon class="mx-0 white" @click="removeRoom(room)">
+                <v-icon color="black">delete</v-icon>
+              </v-btn>
             </v-flex>
           </v-layout>
         </v-container>
       </v-card-media>
-
       <v-card-title>
 
         <v-flex xs12>
@@ -51,7 +54,7 @@
     </v-card>
   </v-flex>
 
-  <v-flex xs7 offset-xs1>
+  <v-flex xs8 >
     <reserve-add :object="room"  @updateList="updateList"></reserve-add>
   </v-flex>
 
@@ -77,7 +80,7 @@ export default {
 
   data(){
     return{
-      roomCollection: database().rooms,
+      collection: database().rooms,
       roomId: this.$router.props.roomId,
       room:{},
     }
@@ -86,14 +89,34 @@ export default {
     updateList(){
       this.$refs.list.loadData(); // reload location list
     },
+
+    /*
+    * Remove room from list and database
+    */
+    removeRoom(object){
+      // remove item from database
+      let result = this.collection.findOne({
+        '$loki': parseInt(object.$loki)
+      });
+
+      if (result) {
+        //Remove item from database
+        this.collection.remove(result);
+        // Redirect to  home page
+        this.$router.push('/');
+        // DEBUG:
+        console.log("Item removed from database:");
+
+      }
+    }
+
   },
   created(){
     try {
       /*
       * Load room from database
       */
-      this.room = this.roomCollection.findOne({'$loki': this.roomId});
-      this.room.status = 'alugado'; // add status attribute
+      this.room = this.collection.findOne({'$loki': this.roomId});
       // DEBUG:
       console.log("Room loaded");
       console.log(this.room);
