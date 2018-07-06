@@ -57,13 +57,13 @@
 
         <v-flex xs3 offset-xs1>
           <v-text-field
-          v-model="guest.cpf" :counter="50" label="RG"
+          v-model="guest.rg" :counter="50" label="RG"
           required></v-text-field>
         </v-flex>
 
         <v-flex xs12>
           <v-text-field
-          v-model="guest.cpf" :counter="50" label="Endereço"
+          v-model="guest.address" :counter="50" label="Endereço"
           required></v-text-field>
         </v-flex>
 

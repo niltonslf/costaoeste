@@ -87,7 +87,6 @@ export default {
     */
     updateRoomsList(data){
       this.loadRoomList();
-      console.log("Updated room list");
     },
 
     /*
@@ -95,8 +94,6 @@ export default {
     */
     loadRoomList(){
       this.rooms = this.roomCollection.chain().simplesort('number').data();
-      console.log("Room list");
-      console.log(this.rooms);
     },
     /**
     * Button to show or hide add room form
