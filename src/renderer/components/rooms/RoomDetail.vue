@@ -1,6 +1,8 @@
 <template lang="html">
 
 	<v-layout row wrap>
+		<toolbar></toolbar>
+
 		<v-flex xs3>
 			<v-card  :color="(room.status == 'vacant' ? 'green' : room.status)">
 				<v-card-media
@@ -67,12 +69,15 @@
 import {database} from '../../connection'
 import  HostsList from '../hosts/HostsList.vue'
 import  HostsAdd from '../hosts/HostsAdd.vue'
+import Toolbar from '../shared/toolbar/Toolbar'
+
 
 export default {
 
 	components:{
 		HostsList,
 		HostsAdd,
+		Toolbar,
 	}, // end components
 
 	data(){
