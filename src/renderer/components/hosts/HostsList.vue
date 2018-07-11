@@ -21,14 +21,14 @@
 					<v-list-tile-action>
 						<v-chip :color="`${host.color} lighten-4`" label small class="ml-0">
 							<v-icon small>today</v-icon>
-							Check-in:<b> {{ host.checkin }}</b>
+							Check-in:<b> {{ formatDate(host.checkin) }}</b>
 						</v-chip>
 					</v-list-tile-action>
 
 					<v-list-tile-action>
 						<v-chip :color="`${host.color} lighten-4`" label small class="ml-0">
 							<v-icon small>today</v-icon>
-							Checkout:<b> {{ host.checkout }}</b>
+							Checkout:<b> {{ formatDate(host.checkout) }}</b>
 						</v-chip>
 					</v-list-tile-action>
 
@@ -39,10 +39,17 @@
 					</v-list-tile-action>
 
 					<v-list-tile-action>
-						<v-btn icon class="mx-0" @click="removeHost(location)">
+						<v-btn icon class="mx-0" @click="finishHost(host)">
+							<v-icon color="pink">attach_money</v-icon>
+						</v-btn>
+					</v-list-tile-action>
+
+					<v-list-tile-action>
+						<v-btn icon class="mx-0" @click="removeHost(host)">
 							<v-icon color="pink">delete</v-icon>
 						</v-btn>
 					</v-list-tile-action>
+
 				</v-list-tile>
 
 				<v-divider></v-divider>
@@ -62,16 +69,16 @@
 
 		</v-card>
 
-		<hosts-edit :modal="editHost"></hosts-edit>
+		<hosts-edit :modal="editHost" :host="hostObject"
+		@modalClosed="manageModal"></hosts-edit>
 	</v-layout>
 
 </template>
 
 <script>
 import {database} from '../../connection'
+import moment from 'moment'
 import  HostsEdit from '../hosts/HostsEdit.vue'
-
-
 
 export default {
 	components:{
@@ -84,26 +91,43 @@ export default {
 			collection: database().hosts,
 			hosts:[],
 			editHost:false,
+			hostObject:null,
+
+			checkoutFormated: null,
+			checkinFormated: null,
 		}
 	},
-
 	methods:{
+		formatDate (date) {
+			if (!date) return null
+			return moment(date).format('DD/MM/YYYY');
+		},
 		/*
 		* Load items from database and show table
 		*/
 		loadData(){
 			this.hosts = this.collection.find({'roomId': this.roomId});
 		},
-
+		/*
+		* Open and close modal
+		*/
+		manageModal(){
+			this.editHost = this.editHost ? false : true;
+		},
 		/*
 		* Edit host
 		*/
 		editHosting(object){
-			this.editHost = true;
-			//HostsEdit.methods.openDialog();
+			this.manageModal();
+			this.hostObject = object;
+		},
+		/*
+		* finish host ,calc price to pay
+		* and change host status to finalized
+		*/
+		finishHost(object){
 
 		},
-
 		/*
 		* Remove room from list and database
 		*/
@@ -114,18 +138,15 @@ export default {
 			});
 			// remove item from database
 			this.collection.remove(result);
-
 			//Remove item from array
 			this.hosts.splice(this.hosts.indexOf(object),1);
 		},
-
 		/*
 		*  Find a host with roomId
 		*/
 		findHost(roomId){
 			return this.collection.find({'roomId': roomId});
 		},
-
 		/*
 		* Verifiy if room is busy, reserved or free
 		*/
@@ -133,7 +154,6 @@ export default {
 			let today = new Date().toLocaleDateString('en-GB'); // date being verified
 			let date = today.split('/');
 			let todayFormated = date[2]+"-"+date[1]+"-"+date[0];
-
 			let host = this.findHost(this.roomId); // select the room that contains the id in host
 			host.map((hostItem)=>{
 				if (todayFormated >= hostItem.checkin && todayFormated <= hostItem.checkout) {
@@ -146,7 +166,6 @@ export default {
 			});
 		},
 	}, // end methods
-
 	created(){
 		this.loadData();
 		this.checkRoomStatus();

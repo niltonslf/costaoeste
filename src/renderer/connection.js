@@ -3,8 +3,10 @@
  *
  */
 const loki = require('lokijs');
-var locations = null;
+var hosts = null;
 var rooms = null;
+var consumption = null;
+
 
 // We will use autoload (one time load at instantiation), and autosave  with 4 sec interval.
 var db = new loki('database.json', {
@@ -14,18 +16,23 @@ var db = new loki('database.json', {
 	autosaveInterval: 4000 // save every four seconds for our example
 });
 
-
 export function database() {
-  locations = db.getCollection("locations");
-  if (locations === null) {
-    locations = db.addCollection("locations");
+  hosts = db.getCollection("hosts");
+  if (hosts === null) {
+    hosts = db.addCollection("hosts");
   }
-  rooms = db.getCollection("rooms");
+	rooms = db.getCollection("rooms");
   if (rooms === null) {
     rooms = db.addCollection("rooms");
   }
+	consumption = db.getCollection("consumption");
+	if (consumption === null) {
+		consumption = db.addCollection("consumption");
+	}
+
   return {
     rooms:rooms,
-    hosts: locations,
+		hosts: hosts,
+    consumption: consumption,
   };
 }
