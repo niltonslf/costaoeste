@@ -136,6 +136,9 @@ export default {
 				isFinished: false,
 				guest: this.guest,
 				roomId: this.object.$loki,
+				daysHostedPrice: this.host.daysHostedPrice,
+				consumptionTotalPrice: this.host.consumptionTotalPrice,
+				totalPrice: this.host.totalPrice,
 			});
 
 			this.clear(); // clear form
@@ -154,6 +157,9 @@ export default {
 				checkout:moment().add(1,'day').format('YYYY-MM-DD'),
 				isChecked:false,
 				guest:{},
+				daysHostedPrice: 0,
+				consumptionTotalPrice: 0,
+				totalPrice: 0,
 			}
 		},
 		/*

@@ -67,6 +67,7 @@
 
 <script>
 import {database} from '../../connection'
+import moment from 'moment'
 import  HostsList from '../hosts/HostsList.vue'
 import  HostsAdd from '../hosts/HostsAdd.vue'
 import Toolbar from '../shared/toolbar/Toolbar'

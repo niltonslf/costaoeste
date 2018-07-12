@@ -191,7 +191,6 @@ export default {
 		*/
 		submit(){
 			var object = this.collection.findOne({'$loki': this.host.$loki});
-			console.log(this.host.daysHostedPrice);
 			// set new values into object loaded
 			object.checkedDate = this.host.checkedDate;
 			object.checkin = this.host.checkin;
@@ -205,7 +204,6 @@ export default {
 			object.consumptionTotalPrice = this.consumptionTotalPrice
 			object.totalPrice = this.totalPrice
 			//update
-			console.log(object);
 			this.collection.update(object);
 			//clode modal
 			this.clear();
