@@ -56,12 +56,10 @@
 	</v-flex>
 
 	<v-flex xs9 pl-4>
-		<router-view  :startDate="this.startDate" :endDate="this.endDate"></router-view>
+		<router-view :startDate="this.startDate" :endDate="this.endDate"></router-view>
 	</v-flex>
 
 </v-layout>
-
-
 
 </v-layout>
 
@@ -102,9 +100,6 @@ export default{
 	},
 
 	watch:{
-		filterDate (val) {
-			this.startDateFormatted = this.formatDate(this.filterDate);
-		},
 		startDate: function(){
 			this.startDateFormatted = this.formatDate(this.startDate);
 		},

@@ -80,14 +80,14 @@
 
 			<v-card-actions>
 					<v-chip color="blue lighten-2" label small class="pa-2 ml-0">
-						<h1 class="title">Hospedagem: <b> {{daysHostedPrice}} R$</b></h1>
+						<h1 class="title">Hospedagem: <b> {{formatMoney(daysHostedPrice)}} R$</b></h1>
 					</v-chip>
 
 					<v-chip color="purple lighten-2" label small class="pa-2 ml-0">
-						<h1 class="title">Consumo: <b> {{consumptionTotalPrice}} R$</b></h1>
+						<h1 class="title">Consumo: <b> {{formatMoney(consumptionTotalPrice)}} R$</b></h1>
 					</v-chip>
 					<v-chip color="green lighten-2" label small class="pa-2 ml-0">
-						<h1 class="title">Total: <b> {{totalPrice}} R$</b></h1>
+						<h1 class="title">Total: <b> {{formatMoney(totalPrice)}} R$</b></h1>
 					</v-chip>
 
 					<v-spacer></v-spacer>
@@ -142,6 +142,9 @@ export default {
 		}
 	},
 	methods:{
+		formatMoney(money){
+			return money.toFixed(2);
+		},
 		formatDate (date) {
 			if (!date) return null
 			return moment(date).format('DD/MM/YYYY');

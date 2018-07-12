@@ -8,7 +8,7 @@
 				<v-card-media
 				class="white--text"
 				height="150px"
-				src="/src/renderer/assets/room.png">
+				src="~@/assets/room.png">
 				<v-container fill-height fluid>
 					<v-layout fill-height>
 						<v-flex xs11 align-end flexbox>
@@ -112,12 +112,23 @@ export default {
 			}
 		},
 		/*
+		*	Remove all products related with host
+		*/
+		eraseConsumption(hostId){
+			let result = database().consumption.find({'hostId': hostId});
+			result.map(function(elem){
+				database().consumption.remove(elem);
+			});
+
+		},
+		/*
 		*	Remove all hosts related with room
 		*/
 		eraseHosts(roomId){
 			let result = database().hosts.find({'roomId': roomId});
 			result.map(function(elem){
 				database().hosts.remove(elem);
+				this.eraseConsumption(elem.$loki);
 			});
 		},
 

@@ -17,7 +17,6 @@ export default {
 		login(){
 			remote.getCurrentWindow().maximize();
 			this.$router.replace('home');
-
 		}
 	},
 	created(){
@@ -33,7 +32,7 @@ html{
 .login{
 	background: green;
 	height:100%;
-	background: url('/src/renderer/assets/login.jpg');
+	background: url('~@/assets/login.jpg');
 	background-size: cover;
 	margin: -24px;
 }

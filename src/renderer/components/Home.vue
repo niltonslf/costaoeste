@@ -17,6 +17,7 @@
 				min-width="290px">
 				<v-text-field
 				slot="activator"
+				label="Filtar por data"
 				v-model="dateFormatted"
 				prepend-icon="event"
 				readonly></v-text-field>
@@ -170,7 +171,7 @@ export default{
 				room.status = 'green'; // reset room status
 				room.hostData = {}; //  no guest
 				host.map((hostItem)=>{
-					if (this.filterDate >= hostItem.checkin && this.filterDate <= hostItem.checkout) {
+					if (this.filterDate >= hostItem.checkin && this.filterDate <= hostItem.checkout && hostItem.isFinished != true) {
 						if (hostItem.isChecked == false) {
 							room.status = 'orange' // room reserved
 						}else if(hostItem.isChecked == true){

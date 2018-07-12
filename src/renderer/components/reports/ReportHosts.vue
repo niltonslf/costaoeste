@@ -121,7 +121,7 @@ export default {
 			let startDate = this.startDate;
 			let endDate = this.endDate;
 			this.hosts = database().hosts.where(function(obj){
-				return (obj.roomId == roomId && obj.checkin >= startDate  && obj.checkout <= endDate);
+				return (obj.roomId == roomId && obj.checkin >= startDate  && obj.checkout <= endDate && obj.isFinished == true);
 			});
 		},
 		/*
@@ -142,7 +142,7 @@ export default {
 			let startDate = this.startDate;
 			let endDate = this.endDate;
 			this.hosts = database().hosts.where(function(obj){
-				return (obj.checkin >= startDate  && obj.checkout <= endDate);
+				return (obj.checkin >= startDate  && obj.checkout <= endDate && obj.isFinished == true);
 			});
 		},
 		/*

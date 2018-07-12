@@ -42,7 +42,7 @@ import {database} from '../../connection'
 import moment from 'moment'
 
 export default {
-	props:['dialog'],
+	props:['dialog','startDate','endDate'],
 	data(){
 		return{
 			//Search
@@ -58,7 +58,14 @@ export default {
 			revenue:0,
 		}
 	},
-
+	watch:{
+		startDate: function(){
+			this.loadData();
+		},
+		endDate: function(){
+			this.loadData();
+		}
+	},
 	methods:{
 		formatDate (date) {
 			if (!date) return null
@@ -78,6 +85,7 @@ export default {
 			}
 		},
 		getRevenue(){
+			this.revenue = 0;
 			this.products.forEach((elem) => {
 				let price = elem.price.toString();
 				this.revenue += parseFloat(price.replace(',','.'));
@@ -88,7 +96,13 @@ export default {
 		* Load items from database and show table
 		*/
 		loadData(){
-			this.products = database().consumption.chain().simplesort('name').data();
+			let startDate = this.startDate;
+			let endDate = this.endDate;
+
+			this.products = database().consumption.where(function(obj){
+				return (moment(obj.meta.created).format('YYYY-MM-DD') >= startDate  && moment(obj.meta.created).format('YYYY-MM-DD') <= endDate);
+			});
+
 			this.getRevenue();
 		},
 		/*
