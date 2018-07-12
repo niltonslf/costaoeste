@@ -160,6 +160,9 @@ export default {
 		'host.checkout': function(){
 			this.checkoutFormated = this.formatDate(this.host.checkout);
 			this.getHostPice();
+		},
+		'host.dailyPrice': function(){
+			this.getHostPice();
 		}
 	},
 
