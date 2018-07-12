@@ -13,6 +13,7 @@
         <v-text-field
         v-model="room.dailyPrice"
         :counter="30"
+        v-money="money"
         label="Preço da diária"
         required
         ></v-text-field>
@@ -22,13 +23,22 @@
 
 <script>
 import {database} from '../../connection'
+import {VMoney} from 'v-money'
 
 export default {
+	directives: {
+		money: VMoney
+	},
 
   data(){
     return {
       room: {},
       collection: database().rooms,
+			money: {
+				decimal: '.',
+				thousands: ',',
+				precision: 2,
+			}
     }
   },
   methods:{

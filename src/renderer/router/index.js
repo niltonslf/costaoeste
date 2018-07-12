@@ -23,7 +23,21 @@ export default new Router({
 		{
       path: '/reports',
       name:'reports',
-      component: require('@/components/reports/Report').default
+      component: require('@/components/reports/Report').default,
+			children:[
+				{
+					path: '/hosts',
+					component: require('@/components/reports/ReportHosts').default,
+				},
+				{
+					path: '/revenue',
+					component: require('@/components/reports/ReportRevenue').default,
+				},
+				{
+					path: '/consumption',
+					component: require('@/components/reports/ReportConsumptions').default,
+				},
+			],
     },
   ]
 })

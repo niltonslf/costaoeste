@@ -1,5 +1,5 @@
 <template>
-	<v-dialog v-model="dialog" width="80%">
+	<v-layout>
 		<v-card>
 			<v-card-title	class="headline grey lighten-2" primary-title>
 				Relatório de hospedagem
@@ -38,21 +38,23 @@
 
 		<v-divider></v-divider>
 
-		<v-card-actions>
-			<v-spacer></v-spacer>
-			<v-btn @click="close" color="error">Fechar</v-btn>
-		</v-card-actions>
 	</v-card>
-</v-dialog>
+	<hosts-edit :modal="editHost" :host="hostObject"
+	@modalClosed="manageModal"></hosts-edit>
+</v-layout>
 </template>
 
 <script>
 import _ from "lodash";
 import {database} from '../../connection'
 import moment from 'moment'
+import  HostsEdit from '../hosts/HostsEdit.vue'
 
 export default {
 	props:['dialog','startDate','endDate'],
+	components:{
+		HostsEdit,
+	}, // end components
 	data(){
 		return{
 			roomCollection: database().rooms,
@@ -72,6 +74,8 @@ export default {
 			//rooms
 			rooms:[],
 			hosts:[],
+			editHost:false,
+			hostObject:null,
 		}
 	},
 
@@ -96,8 +100,16 @@ export default {
 		/*
 		*	 show host details
 		*/
-		seeHost(hostId){
-			alert('Exibir detalhes do host (tipo a tela de editar)');
+		seeHost(object){
+			this.manageModal();
+			this.hostObject = object;
+
+		},
+		/*
+		* Open and close modal
+		*/
+		manageModal(){
+			this.editHost = this.editHost ? false : true;
 		},
 		/*
 		*	 Show room report
@@ -105,8 +117,6 @@ export default {
 		reportHost(roomId){
 			let startDate = this.startDate;
 			let endDate = this.endDate;
-			console.log(startDate);
-
 			this.hosts = database().hosts.where(function(obj){
 				return (obj.roomId == roomId && obj.checkin >= startDate  && obj.checkout <= endDate);
 			});

@@ -1,41 +1,39 @@
 <template>
-	<v-dialog v-model="dialog" width="80%">
-		<v-card>
-			<v-card-title	class="headline grey lighten-2" primary-title>
-				Relatório de produtos consumidos
-			</v-card-title>
+	<v-layout row wrap>
+		<v-flex xs12>
+			<v-card>
+				<v-card-title	class="headline grey lighten-2" primary-title>
+					Relatório de produtos consumidos
+				</v-card-title>
 
-			<v-layout row wrap pa-2>
+				<v-layout row wrap pa-2>
 
-				<v-flex xs12 mb-2>
-					<v-chip color="green lighten-2" label small class="pa-2 ml-0">
-						<h1 class="title">Receita: <b> {{revenue}} R$</b></h1>
-					</v-chip>
+					<v-flex xs12 mb-2>
+						<v-chip color="green lighten-2" label small class="pa-2 ml-0">
+							<h1 class="title">Receita: <b> {{revenue}} R$</b></h1>
+						</v-chip>
+					</v-flex>
+
+
+					<v-flex xs12>
+						<v-data-table
+						:headers="headers"
+						:items="list"
+						hide-actions
+						class="elevation-1">
+						<template slot="items" slot-scope="props">
+							<td class="text-xs-center">{{props.item.name}}</td>
+							<td class="text-xs-left">{{props.item.price}}</td>
+						</template>
+					</v-data-table>
 				</v-flex>
+			</v-layout>
 
+			<v-divider></v-divider>
 
-				<v-flex xs12>
-					<v-data-table
-					:headers="headers"
-					:items="list"
-					hide-actions
-					class="elevation-1">
-					<template slot="items" slot-scope="props">
-						<td class="text-xs-center">{{props.item.name}}</td>
-						<td class="text-xs-left">{{props.item.price}}</td>
-					</template>
-				</v-data-table>
-			</v-flex>
-		</v-layout>
-
-		<v-divider></v-divider>
-
-		<v-card-actions>
-			<v-spacer></v-spacer>
-			<v-btn @click="close" color="error">Fechar</v-btn>
-		</v-card-actions>
-	</v-card>
-</v-dialog>
+		</v-card>
+	</v-flex>
+</v-layout>
 </template>
 
 <script>

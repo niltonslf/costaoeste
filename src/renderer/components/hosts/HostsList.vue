@@ -3,7 +3,7 @@
 		<v-subheader class="title">Histórico</v-subheader>
 		<v-card>
 			<v-list two-line v-for="host in hosts">
-				<v-list-tile @click="">
+				<v-list-tile @click="editHosting(host)">
 					<v-list-tile-action>
 						<v-icon :color="host.color">hotel</v-icon>
 					</v-list-tile-action>
@@ -33,14 +33,8 @@
 					</v-list-tile-action>
 
 					<v-list-tile-action>
-						<v-btn icon class="mx-0" @click="editHosting(host)">
-							<v-icon color="teal">edit</v-icon>
-						</v-btn>
-					</v-list-tile-action>
-
-					<v-list-tile-action>
-						<v-btn icon class="mx-0" @click="removeHost(host)">
-							<v-icon color="pink">delete</v-icon>
+						<v-btn icon color="red" class="mx-0" @click="removeHost(host)">
+							<v-icon color="white">delete</v-icon>
 						</v-btn>
 					</v-list-tile-action>
 
@@ -100,7 +94,7 @@ export default {
 		* Load items from database and show table
 		*/
 		loadData(){
-			this.hosts = this.collection.find({'roomId': this.roomId});
+			this.hosts = this.collection.chain().find({'roomId': this.roomId}).simplesort('$loki',true).limit(20).data();
 		},
 		/*
 		* Open and close modal

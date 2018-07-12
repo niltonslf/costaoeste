@@ -1,38 +1,36 @@
 <template>
-	<v-dialog v-model="dialog" width="80%">
-		<v-card>
-			<v-card-title	class="headline grey lighten-2" primary-title>
-				Receita do período
-			</v-card-title>
+	<v-layout row wrap>
+		<v-flex xs12>
+			<v-card>
+				<v-card-title	class="headline grey lighten-2" primary-title>
+					Receita do período
+				</v-card-title>
 
-			<v-layout row wrap pa-2>
-				<v-flex xs4>
-					<v-chip label color="purple" text-color="white">
-						<v-icon left>attach_money</v-icon>Receita com hospedagens:<b>{{hostRevenue}} R$</b>
-					</v-chip>
-				</v-flex>
+				<v-layout row wrap pa-2>
+					<v-flex xs4>
+						<v-chip label color="purple" text-color="white">
+							<v-icon left>attach_money</v-icon>Hospedagens:<b class="headline pl-2"> {{hostRevenue}} R$</b>
+						</v-chip>
+					</v-flex>
 
-				<v-flex xs4>
-					<v-chip label color="pink" text-color="white">
-						<v-icon left>attach_money</v-icon>Receita com hospedagens:<b>{{hostRevenue}} R$</b>
-					</v-chip>
-				</v-flex>
+					<v-flex xs4>
+						<v-chip label color="pink" text-color="white">
+							<v-icon left>attach_money</v-icon>Produtos consumidos:<b  class="headline pl-2"> {{consumptionRevenue}} R$</b>
+						</v-chip>
+					</v-flex>
 
-				<v-flex xs4>
-					<v-chip label color="green" text-color="white">
-						<v-icon left>attach_money</v-icon>Total: <b>{{revenueTotal}} R$</b>
-					</v-chip>
-				</v-flex>
-			</v-layout>
+					<v-flex xs4>
+						<v-chip label color="green" text-color="white">
+							<v-icon left>attach_money</v-icon>Total: <b class="headline pl-2">{{revenueTotal}} R$</b>
+						</v-chip>
+					</v-flex>
+				</v-layout>
 
-			<v-divider></v-divider>
+				<v-divider></v-divider>
 
-			<v-card-actions>
-				<v-spacer></v-spacer>
-				<v-btn @click="close" color="error">Fechar</v-btn>
-			</v-card-actions>
-		</v-card>
-	</v-dialog>
+			</v-card>
+		</v-flex>
+	</v-layout>
 </template>
 
 <script>

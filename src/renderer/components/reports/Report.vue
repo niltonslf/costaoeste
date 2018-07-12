@@ -30,41 +30,38 @@
 	</div>
 </toolbar>
 
-<div class="grid-container">
+<v-layout row wrap>
 
-	<div class="grid-item">
-		<v-card color="purple full-height darken-2"class="pointer white--text" @click.native="showHostReport">
+	<v-flex xs3>
+		<v-card color="purple full-height darken-2"class="pointer white--text" @click.native="gotoPage('hosts')">
 			<v-card-title primary-title>
 				<h1 class="report-value">Relatório</h1>
 				<span class="headline w-100">Hospedagens</span>
 			</v-card-title>
 		</v-card>
-	</div>
 
-	<div class="grid-item">
-		<v-card color="pink full-height darken-2"class="pointer white--text" @click.native="showConsumptionReport">
+		<v-card color="pink full-height darken-2"class="pointer white--text" @click.native="gotoPage('consumption')">
 			<v-card-title primary-title>
 				<h1 class="report-value">Relatório</h1>
 				<span class="headline w-100">Produtos consumidos</span>
 			</v-card-title>
 		</v-card>
-	</div>
 
-	<div class="grid-item">
-		<v-card color="green full-height darken-2"class="pointer white--text" @click.native="showRevenueReport">
+		<v-card color="green full-height darken-2"class="pointer white--text" @click.native="gotoPage('revenue')">
 			<v-card-title primary-title>
 				<h1 class="report-value ">Relatório</h1>
 				<span class="headline w-100">Receita no período</span>
 			</v-card-title>
 		</v-card>
-	</div>
-</div>
+	</v-flex>
 
-<report-hosts :dialog="hostDialog" :startDate="this.startDate" :endDate="this.endDate" @closeHostDialog="showHostReport"></report-hosts>
+	<v-flex xs9 pl-4>
+		<router-view  :startDate="this.startDate" :endDate="this.endDate"></router-view>
+	</v-flex>
 
-<report-consumptions :dialog="consumptionDialog" :startDate="this.startDate" :endDate="this.endDate" @closeHostDialog="showConsumptionReport"></report-consumptions>
+</v-layout>
 
-<report-revenue :dialog="revenueDialog" :startDate="this.startDate" :endDate="this.endDate" @closeHostDialog="showRevenueReport"></report-revenue>
+
 
 </v-layout>
 
@@ -122,8 +119,7 @@ export default{
 			return moment(date).format('DD/MM/YYYY');
 		},
 
-		gotoPage(routerName,roomId){
-			this.$router.props={roomId: roomId};
+		gotoPage(routerName){
 			this.$router.replace(routerName);
 		},
 		/*
@@ -134,24 +130,6 @@ export default{
 			this.startDateFormatted = moment().startOf('month').format('DD/MM/YYYY');
 			this.endDate = moment().endOf('month').format('YYYY-MM-DD');
 			this.endDateFormatted = moment().endOf('month').format('DD/MM/YYYY');
-		},
-		/*
-		*  show report
-		*/
-		showHostReport(){
-			this.hostDialog = (this.hostDialog ? false : true);
-		},
-		/*
-		*  show report
-		*/
-		showConsumptionReport(){
-			this.consumptionDialog = (this.consumptionDialog ? false : true);
-		},
-		/*
-		*  show report
-		*/
-		showRevenueReport(){
-			this.revenueDialog = (this.revenueDialog ? false : true);
 		},
 	},
 
