@@ -108,7 +108,6 @@ export default {
 
 	data: () => ({
 		dialog: false,
-		collection: null,
 		//Data picker
 		checkinFormated: null,
 		pickerCheckin: false,
@@ -167,7 +166,7 @@ export default {
 		* Save data into database
 		*/
 		submit(){
-			let result = this.collection.insert({
+			let result = database().hosts.insert({
 				checkin: this.host.checkin,
 				checkout: this.host.checkout,
 				isChecked:this.host.isChecked,
@@ -179,8 +178,6 @@ export default {
 				consumptionTotalPrice: this.consumptionTotalPrice,
 				totalPrice: this.totalPrice,
 			});
-			console.log("save");
-			console.log(result);
 			this.clear(); // clear form
 			this.$emit('updateList'); // emit this command to update location list
 		},
@@ -189,7 +186,7 @@ export default {
 		* load data
 		*/
 		loadData(){
-			this.collection = database().hosts;
+			this.dialog = false;
 			this.checkinFormated = moment().format('DD/MM/YYYY');
 			this.checkoutFormated = moment().add(1,'day').format('DD/MM/YYYY');
 			this.host ={
@@ -200,27 +197,18 @@ export default {
 				daysHostedPrice: 0,
 				consumptionTotalPrice: 0,
 				totalPrice: 0,
+			};
+			this.guest = {
+				name:'',
+				tel:'',
+				cpf:'',
 			}
 		},
 		/*
 		* Clear form data
 		*/
 		clear(){
-			this.dialog = false;
-			this.host ={
-				checkin:'',
-				checkout:'',
-				isChecked:false,
-				guest:{},
-				daysHostedPrice: 0,
-				consumptionTotalPrice: 0,
-				totalPrice: 0,
-			}
-			this.guest = {
-				name:'',
-				tel:'',
-				cpf:'',
-			}
+			this.loadData();
 		},
 
 	}, // end methods

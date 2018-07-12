@@ -3,11 +3,11 @@
 		<v-subheader class="title">Histórico</v-subheader>
 		<v-card>
 			<v-list two-line v-for="host in hosts">
-				<v-list-tile @click="editHosting(host)">
+				<v-list-tile>
 					<v-list-tile-action>
 						<v-icon :color="host.color">hotel</v-icon>
 					</v-list-tile-action>
-					<v-list-tile-content>
+					<v-list-tile-content class="pointer"  @click="editHosting(host)">
 
 						<v-list-tile-title>{{host.guest.name}}</v-list-tile-title>
 
@@ -113,15 +113,27 @@ export default {
 		/*
 		* Remove room from list and database
 		*/
-		removeHost(object){
+		removeHost(hostObject){
+			this.eraseConsumption(hostObject.$loki); // Remove products related
 			// find from database
 			let result = this.collection.findOne({
-				'$loki': parseInt(object.$loki)
+				'$loki': parseInt(hostObject.$loki)
 			});
 			// remove item from database
 			this.collection.remove(result);
 			//Remove item from array
-			this.hosts.splice(this.hosts.indexOf(object),1);
+			this.hosts.splice(this.hosts.indexOf(hostObject),1);
+
+		},
+		/*
+		*	Remove all products related with host
+		*/
+		eraseConsumption(hostId){
+			let result = database().consumption.find({'hostId': hostId});
+			result.map(function(elem){
+				database().consumption.remove(elem);
+			});
+
 		},
 		/*
 		*  Find a host with roomId
@@ -156,4 +168,7 @@ export default {
 </script>
 
 <style lang="css">
+.pointer{
+	cursor: pointer;
+}
 </style>

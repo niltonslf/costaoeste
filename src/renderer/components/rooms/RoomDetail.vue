@@ -98,6 +98,7 @@ export default {
 		* Remove room from list and database
 		*/
 		removeRoom(object){
+			this.eraseHosts(object.$loki); // remove hosts related with room
 			// remove item from database
 			let result = this.collection.findOne({
 				'$loki': parseInt(object.$loki)
@@ -109,6 +110,15 @@ export default {
 				// Redirect to  home page
 				this.$router.push('/');
 			}
+		},
+		/*
+		*	Remove all hosts related with room
+		*/
+		eraseHosts(roomId){
+			let result = database().hosts.find({'roomId': roomId});
+			result.map(function(elem){
+				database().hosts.remove(elem);
+			});
 		},
 
 		/*
@@ -142,7 +152,7 @@ export default {
 			/* Load room from database */
 			this.room = this.collection.findOne({'$loki': this.roomId});
 		} catch (e) {
-			this.$router.push({name:'home'});
+			this.$router.push('home');
 		}
 	}
 }
