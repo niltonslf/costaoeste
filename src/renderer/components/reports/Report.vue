@@ -173,6 +173,7 @@ export default{
 
 .full-height{
 	height: 150px !important;
+	margin-bottom: 10px;
 }
 
 

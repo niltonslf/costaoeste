@@ -27,15 +27,6 @@
 				<v-flex xs12>
 					<v-list two-line subheader>
 						<v-subheader>Informações do quarto</v-subheader>
-						<v-list-tile>
-							<v-list-tile-action>
-								<v-icon color="indigo">attach_money</v-icon>
-							</v-list-tile-action>
-							<v-list-tile-content>
-								<v-list-tile-title>Preço dia</v-list-tile-title>
-								<v-list-tile-sub-title>{{room.dailyPrice}}</v-list-tile-sub-title>
-							</v-list-tile-content>
-						</v-list-tile>
 
 						<v-divider></v-divider>
 
