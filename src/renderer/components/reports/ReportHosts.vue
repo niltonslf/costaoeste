@@ -10,6 +10,7 @@
 			<v-layout row wrap pa-2>
 				<div class="grid-room">
 					<v-btn color="blue" class="grid-item" v-for="room in rooms" dark @click="reportHost(room.$loki)">{{room.number}}</v-btn>
+					<v-btn color="blue" class="grid-item" dark @click="reportAllHost()"><b>TODOS</b></v-btn>
 				</div>
 				<v-flex xs12>
 					<v-text-field  v-model="filterTerm" :counter="200"  label="Buscar por um hóspede"></v-text-field>
@@ -21,7 +22,7 @@
 					hide-actions
 					class="elevation-1">
 					<template slot="items" slot-scope="props">
-						<td class="text-xs-center">{{ props.item.roomId }}</td>
+						<td class="text-xs-center">{{ getRoomNumber(props.item.roomId )}}</td>
 						<td class="text-xs-left">{{ props.item.guest.name }}</td>
 						<td class="text-xs-center">{{formatDate(props.item.checkin)}}</td>
 						<td class="text-xs-center">{{formatDate(props.item.checkout)}}</td>
@@ -120,7 +121,27 @@ export default {
 			this.hosts = database().hosts.where(function(obj){
 				return (obj.roomId == roomId && obj.checkin >= startDate  && obj.checkout <= endDate);
 			});
+		},
+		/*
+		*	 Get room number
+		*/
+		getRoomNumber(roomId){
+			let result = database().rooms.findOne({'$loki': roomId})
+			if (!result) {
+				return 'Error';
+			}
+			return result.number;
+		},
 
+		/*
+		*	 Show room report for all rooms
+		*/
+		reportAllHost(){
+			let startDate = this.startDate;
+			let endDate = this.endDate;
+			this.hosts = database().hosts.where(function(obj){
+				return (obj.checkin >= startDate  && obj.checkout <= endDate);
+			});
 		},
 		/*
 		* Load items from database and show table
