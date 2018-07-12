@@ -14,7 +14,7 @@
 		</v-card-title>
 
 		<v-layout row wrap px-4 pb-3>
-			<v-flex xs6 sm6 md4>
+			<v-flex xs2>
 				<v-menu ref="pickerCheckin"
 				transition="scale-transition">
 
@@ -24,7 +24,7 @@
 				<v-date-picker no-title v-model="host.checkin" @input="$refs.pickerCheckin.save(host.checkin)"></v-date-picker>
 			</v-menu>
 		</v-flex>
-		<v-flex xs6 sm6 md4>
+		<v-flex xs2 pl-4>
 			<v-menu	ref="pickerCheckout" transition="scale-transition">
 
 				<v-text-field slot="activator" v-model="checkoutFormated" label="Check-out" prepend-icon="event" readonly ></v-text-field>
@@ -33,9 +33,18 @@
 			</v-menu>
 		</v-flex>
 
-		<v-flex xs3 sm3 md3 offset-md1 pt-4>
+		<v-flex xs2 pl-4>
+			<v-text-field
+			v-model="host.dailyPrice"
+			v-money="money"
+			label="Preço da diária"
+			required
+			></v-text-field>
+		</v-flex>
+
+		<v-flex xs3 pl-4 pt-4>
 			<v-switch
-			label="Cliente hospedado?"
+			label="Já hospedado?"
 			v-model="host.isChecked"
 			></v-switch>
 		</v-flex>
@@ -43,31 +52,39 @@
 		<v-flex xs12>
 			<v-subheader class="title">Dados do hóspede</v-subheader>
 			<v-layout row wrap>
-
-				<v-flex xs12>
+				<v-flex xs6>
 					<v-text-field v-model="guest.name" label="Nome do hóspede" required></v-text-field>
 				</v-flex>
 
-				<v-flex xs6>
+				<v-flex xs3>
 					<v-text-field label="(00) - 0000-000" class="input-group--focused" prepend-icon="phone" mask="(nn) nnnnn-nnnn" v-model="guest.tel" single-line ></v-text-field>
 				</v-flex>
 
-				<v-flex xs6 pl-4>
+				<v-flex xs3 pl-4>
 					<v-text-field
+					mask="nnn.nnn.nnn-nn"
 					v-model="guest.cpf" :counter="50" label="CPF"
 					required></v-text-field>
 				</v-flex>
 
-				<v-flex xs5>
+				<v-flex xs6>
 					<v-text-field
 					v-model="guest.rg" :counter="50" label="RG"
 					required></v-text-field>
-				</v-flex>
 
-				<v-flex xs7 pl-4>
 					<v-text-field
 					v-model="guest.address" :counter="50" label="Endereço"
 					required></v-text-field>
+				</v-flex>
+
+				<v-flex xs6 pl-4>
+					<v-text-field
+					label="Observação"
+					name="name"
+					v-model="host.observation"
+					textarea
+					rows="4"
+					></v-text-field>
 				</v-flex>
 
 			</v-layout>
@@ -102,9 +119,13 @@
 <script>
 import {database} from '../../connection'
 import moment from 'moment'
+import {VMoney} from 'v-money'
 
 export default {
 	props:['object'],
+	directives: {
+		money: VMoney
+	},
 
 	data: () => ({
 		dialog: false,
@@ -116,6 +137,13 @@ export default {
 		// host data
 		host:{},
 		guest:{},
+
+		// Mask money
+		money: {
+			decimal: '.',
+			thousands: ',',
+			precision: 2,
+		},
 
 		//Prices
 		daysHostedPrice: 0,
@@ -147,15 +175,10 @@ export default {
 		*	Get price of hosts
 		*/
 		getHostPice(){
-			// 1 - Get room price
-			let result = database().rooms.findOne({'$loki':this.object.$loki});
-			let roomPrice = result.dailyPrice;
-			// 2- Multiply room price with how many days was Hosted
-
 			let checkinDate = moment(this.host.checkin);
 			let checkoutDate = moment(this.host.checkout);
 			let daysHosted = checkoutDate.diff(checkinDate, 'days');
-			this.daysHostedPrice = roomPrice * daysHosted; // set host price
+			this.daysHostedPrice = this.host.dailyPrice * daysHosted; // set host price
 
 			this.getTotalPice(); // calc total price to pay
 		},
@@ -180,6 +203,8 @@ export default {
 				daysHostedPrice: this.daysHostedPrice,
 				consumptionTotalPrice: this.consumptionTotalPrice,
 				totalPrice: this.totalPrice,
+				observation: this.host.observation,
+				dailyPrice: this.host.dailyPrice,
 			});
 			this.clear(); // clear form
 			this.$emit('updateList'); // emit this command to update location list
@@ -200,6 +225,8 @@ export default {
 				daysHostedPrice: 0,
 				consumptionTotalPrice: 0,
 				totalPrice: 0,
+				observation:'',
+				dailyPrice: 0.00,
 			};
 			this.guest = {
 				name:'',
