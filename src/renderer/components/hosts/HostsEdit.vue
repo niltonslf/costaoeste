@@ -166,7 +166,7 @@ export default {
 			this.getTotalPice(); // Update total price with consumption price
 		},
 		/*
-		*	Get price of
+		*	Get price of hosts
 		*/
 		getHostPice(){
 			// 1 - Get room price

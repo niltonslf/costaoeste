@@ -1,19 +1,28 @@
 <template>
 	<v-dialog v-model="dialog" width="80%">
-
-		<v-btn fab bottom right slot="activator" color="blue" dark fixed @click.stop="dialog = !dialog">
-			<v-icon class="fix-icon">add</v-icon>
-		</v-btn>
-
 		<v-card>
 			<v-card-title	class="headline grey lighten-2" primary-title>
 				Receita do período
 			</v-card-title>
 
 			<v-layout row wrap pa-2>
-				Receita com hospedagens: {{hostRevenue}}
-				Receita com produtos consumidos: {{consumptionRevenue}}
-				Total:
+				<v-flex xs4>
+					<v-chip label color="purple" text-color="white">
+						<v-icon left>attach_money</v-icon>Receita com hospedagens:<b>{{hostRevenue}} R$</b>
+					</v-chip>
+				</v-flex>
+
+				<v-flex xs4>
+					<v-chip label color="pink" text-color="white">
+						<v-icon left>attach_money</v-icon>Receita com hospedagens:<b>{{hostRevenue}} R$</b>
+					</v-chip>
+				</v-flex>
+
+				<v-flex xs4>
+					<v-chip label color="green" text-color="white">
+						<v-icon left>attach_money</v-icon>Total: <b>{{revenueTotal}} R$</b>
+					</v-chip>
+				</v-flex>
 			</v-layout>
 
 			<v-divider></v-divider>
@@ -65,6 +74,7 @@ export default {
 				let price = elem.price.toString();
 				this.consumptionRevenue += parseFloat(price.replace(',','.'));
 			});
+			this.loadRevenueTotal();
 		},
 		/*
 		* Load items from database
@@ -79,20 +89,17 @@ export default {
 		*/
 		getHostRevenue(){
 			this.hosts.forEach((elem) => {
+				console.log(elem);
 				let price;
 				try {
 					price = elem.totalPrice.toString();
 				} catch (e) {
 					price = '0,00';
 				}
-
-				console.log("Price: "+price);
-				console.log(elem);
-
 				this.hostRevenue += parseFloat(price.replace(',','.'));
 			});
+			this.loadRevenueTotal();
 
-			alert(this.hostRevenue);
 		},
 		/*
 		* Load items from database
@@ -102,6 +109,9 @@ export default {
 			this.getHostRevenue();
 		},
 
+		loadRevenueTotal(){
+			this.revenueTotal = this.hostRevenue + this.consumptionRevenue;
+		},
 		/*
 		* Close modal
 		*/

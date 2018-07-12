@@ -77,7 +77,19 @@
 	<v-divider></v-divider>
 
 	<v-card-actions>
+		<v-chip color="blue lighten-2" label small class="pa-2 ml-0">
+			<h1 class="title">Hospedagem: <b> {{daysHostedPrice}} R$</b></h1>
+		</v-chip>
+
+		<v-chip color="purple lighten-2" label small class="pa-2 ml-0">
+			<h1 class="title">Consumo: <b> {{consumptionTotalPrice}} R$</b></h1>
+		</v-chip>
+		<v-chip color="green lighten-2" label small class="pa-2 ml-0">
+			<h1 class="title">Total: <b> {{totalPrice}} R$</b></h1>
+		</v-chip>
+
 		<v-spacer></v-spacer>
+
 		<v-btn @click="submit" color="success">Salvar</v-btn>
 		<v-btn @click="clear" color="error">Cancelar</v-btn>
 	</v-card-actions>
@@ -103,19 +115,24 @@ export default {
 		checkoutFormated: null,
 		pickerCheckout: false,
 		// host data
-		host:{
-
-		},
+		host:{},
 		guest:{},
+
+		//Prices
+		daysHostedPrice: 0,
+		consumptionTotalPrice: 0,
+		totalPrice: 0,
 	}),
 
 	watch:{
 		'host.checkin': function(){
 			this.checkinFormated = this.formatDate(this.host.checkin);
+			this.getHostPice()
 		},
 
 		'host.checkout': function(){
 			this.checkoutFormated = this.formatDate(this.host.checkout);
+			this.getHostPice();
 		}
 	},
 
@@ -123,6 +140,28 @@ export default {
 		formatDate (date) {
 			if (!date) return null
 			return moment(date).format('DD/MM/YYYY');
+		},
+		/*
+		*	Get price of hosts
+		*/
+		getHostPice(){
+			// 1 - Get room price
+			let result = database().rooms.findOne({'$loki':this.object.$loki});
+			let roomPrice = result.dailyPrice;
+			// 2- Multiply room price with how many days was Hosted
+
+			let checkinDate = moment(this.host.checkin);
+			let checkoutDate = moment(this.host.checkout);
+			let daysHosted = checkoutDate.diff(checkinDate, 'days');
+			this.daysHostedPrice = roomPrice * daysHosted; // set host price
+
+			this.getTotalPice(); // calc total price to pay
+		},
+		/*
+		*	Get price of
+		*/
+		getTotalPice(){
+			this.totalPrice =  this.consumptionTotalPrice + this.daysHostedPrice;
 		},
 		/*
 		* Save data into database
@@ -136,11 +175,12 @@ export default {
 				isFinished: false,
 				guest: this.guest,
 				roomId: this.object.$loki,
-				daysHostedPrice: this.host.daysHostedPrice,
-				consumptionTotalPrice: this.host.consumptionTotalPrice,
-				totalPrice: this.host.totalPrice,
+				daysHostedPrice: this.daysHostedPrice,
+				consumptionTotalPrice: this.consumptionTotalPrice,
+				totalPrice: this.totalPrice,
 			});
-
+			console.log("save");
+			console.log(result);
 			this.clear(); // clear form
 			this.$emit('updateList'); // emit this command to update location list
 		},
@@ -172,6 +212,9 @@ export default {
 				checkout:'',
 				isChecked:false,
 				guest:{},
+				daysHostedPrice: 0,
+				consumptionTotalPrice: 0,
+				totalPrice: 0,
 			}
 			this.guest = {
 				name:'',

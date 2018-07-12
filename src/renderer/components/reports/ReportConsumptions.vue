@@ -1,10 +1,5 @@
 <template>
 	<v-dialog v-model="dialog" width="80%">
-
-		<v-btn fab bottom right slot="activator" color="blue" dark fixed @click.stop="dialog = !dialog">
-			<v-icon class="fix-icon">add</v-icon>
-		</v-btn>
-
 		<v-card>
 			<v-card-title	class="headline grey lighten-2" primary-title>
 				Relatório de produtos consumidos

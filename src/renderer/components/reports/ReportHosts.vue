@@ -1,10 +1,5 @@
 <template>
 	<v-dialog v-model="dialog" width="80%">
-
-		<v-btn fab bottom right slot="activator" color="blue" dark fixed @click.stop="dialog = !dialog">
-			<v-icon class="fix-icon">add</v-icon>
-		</v-btn>
-
 		<v-card>
 			<v-card-title	class="headline grey lighten-2" primary-title>
 				Relatório de hospedagem
@@ -57,7 +52,7 @@ import {database} from '../../connection'
 import moment from 'moment'
 
 export default {
-	props:['dialog'],
+	props:['dialog','startDate','endDate'],
 	data(){
 		return{
 			roomCollection: database().rooms,
@@ -108,7 +103,14 @@ export default {
 		*	 Show room report
 		*/
 		reportHost(roomId){
-			this.hosts = database().hosts.find({'roomId': roomId});
+			let startDate = this.startDate;
+			let endDate = this.endDate;
+			console.log(startDate);
+
+			this.hosts = database().hosts.where(function(obj){
+				return (obj.roomId == roomId && obj.checkin >= startDate  && obj.checkout <= endDate);
+			});
+
 		},
 		/*
 		* Load items from database and show table

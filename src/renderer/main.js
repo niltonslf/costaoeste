@@ -2,6 +2,7 @@ import Vue from 'vue'
 import axios from 'axios'
 import Vuetify from 'vuetify'
 
+
 Vue.use(Vuetify)
 
 import App from './App'

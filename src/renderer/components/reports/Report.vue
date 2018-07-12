@@ -4,52 +4,68 @@
 			<span slot="app-title">Relatórios</span>
 			<div slot="app-picker">
 				<v-menu
-				ref="pickerStatus"
-				:close-on-content-click="false" v-model="pickerStatus" :nudge-right="40" :return-value.sync="filterDate"
+				ref="pickerStartStatus"
+				:close-on-content-click="false" v-model="pickerStartStatus" :nudge-right="40" :return-value.sync="startDate"
 				lazy transition="scale-transition" offset-y	full-width min-width="290px">
 				<v-text-field
 				slot="activator"
-				v-model="dateFormatted"
+				v-model="startDateFormatted"
 				prepend-icon="event"
 				readonly></v-text-field>
-				<v-date-picker v-model="filterDate" no-title  @input="$refs.pickerStatus.save(filterDate)"></v-date-picker>
+				<v-date-picker v-model="startDate" no-title  @input="$refs.pickerStartStatus.save(startDate)"></v-date-picker>
 			</v-menu>
 		</div>
-	</toolbar>
-
-	<div class="grid-container">
-
-		<div class="grid-item">
-			<v-card color="purple full-height darken-2"class="pointer white--text" @click.native="showHostReport">
-				<v-card-title primary-title>
-					<h1 class="report-value display-2">32</h1>
-					<span class="headline w-100">Hospedagens</span>
-				</v-card-title>
-			</v-card>
-		</div>
-
-		<div class="grid-item">
-			<v-card color="pink full-height darken-2"class="pointer white--text" @click.native="showConsumptionReport">
-				<v-card-title primary-title>
-					<h1 class="report-value display-2">150</h1>
-					<span class="headline w-100">Produtos consumidos</span>
-				</v-card-title>
-			</v-card>
-		</div>
-
-		<div class="grid-item">
-			<v-card color="green full-height darken-2"class="pointer white--text" @click.native="showRevenueReport">
-				<v-card-title primary-title>
-					<h1 class="report-value display-2">1200,00 R$</h1>
-					<span class="headline w-100">Receita no período</span>
-				</v-card-title>
-			</v-card>
-		</div>
-
+		<div slot="app-picker">
+			<v-menu
+			ref="pickerEndStatus"
+			:close-on-content-click="false" v-model="pickerEndStatus" :nudge-right="40" :return-value.sync="endDate"
+			lazy transition="scale-transition" offset-y	full-width min-width="290px">
+			<v-text-field
+			slot="activator"
+			v-model="endDateFormatted"
+			prepend-icon="event"
+			readonly></v-text-field>
+			<v-date-picker v-model="endDate" no-title  @input="$refs.pickerEndStatus.save(endDate)"></v-date-picker>
+		</v-menu>
 	</div>
-	<report-hosts :dialog="hostDialog" @closeHostDialog="showHostReport"></report-hosts>
-	<report-consumptions :dialog="consumptionDialog" @closeHostDialog="showConsumptionReport"></report-consumptions>
-	<report-revenue :dialog="revenueDialog" @closeHostDialog="showRevenueReport"></report-revenue>
+</toolbar>
+
+<div class="grid-container">
+
+	<div class="grid-item">
+		<v-card color="purple full-height darken-2"class="pointer white--text" @click.native="showHostReport">
+			<v-card-title primary-title>
+				<h1 class="report-value">Relatório</h1>
+				<span class="headline w-100">Hospedagens</span>
+			</v-card-title>
+		</v-card>
+	</div>
+
+	<div class="grid-item">
+		<v-card color="pink full-height darken-2"class="pointer white--text" @click.native="showConsumptionReport">
+			<v-card-title primary-title>
+				<h1 class="report-value">Relatório</h1>
+				<span class="headline w-100">Produtos consumidos</span>
+			</v-card-title>
+		</v-card>
+	</div>
+
+	<div class="grid-item">
+		<v-card color="green full-height darken-2"class="pointer white--text" @click.native="showRevenueReport">
+			<v-card-title primary-title>
+				<h1 class="report-value ">Relatório</h1>
+				<span class="headline w-100">Receita no período</span>
+			</v-card-title>
+		</v-card>
+	</div>
+</div>
+
+<report-hosts :dialog="hostDialog" :startDate="this.startDate" :endDate="this.endDate" @closeHostDialog="showHostReport"></report-hosts>
+
+<report-consumptions :dialog="consumptionDialog" :startDate="this.startDate" :endDate="this.endDate" @closeHostDialog="showConsumptionReport"></report-consumptions>
+
+<report-revenue :dialog="revenueDialog" :startDate="this.startDate" :endDate="this.endDate" @closeHostDialog="showRevenueReport"></report-revenue>
+
 </v-layout>
 
 </template>
@@ -74,9 +90,12 @@ export default{
 	data(){
 		return{
 			//Data picker
-			pickerStatus: false,
-			filterDate: null,
-			dateFormatted: null,
+			pickerStartStatus: false,
+			pickerEndStatus: false,
+			startDate: null,
+			endDate: null,
+			startDateFormatted: null,
+			endDateFormatted: null,
 
 			//Reports
 			hostDialog: false,
@@ -87,8 +106,13 @@ export default{
 
 	watch:{
 		filterDate (val) {
-			this.loadRoomList();
-			this.dateFormatted = this.formatDate(this.filterDate);
+			this.startDateFormatted = this.formatDate(this.filterDate);
+		},
+		startDate: function(){
+			this.startDateFormatted = this.formatDate(this.startDate);
+		},
+		endDate: function(){
+			this.endDateFormatted = this.formatDate(this.endDate);
 		}
 	},
 
@@ -102,7 +126,15 @@ export default{
 			this.$router.props={roomId: roomId};
 			this.$router.replace(routerName);
 		},
-
+		/*
+		*	Load data
+		*/
+		loadData(){
+			this.startDate = moment().startOf('month').format('YYYY-MM-DD');
+			this.startDateFormatted = moment().startOf('month').format('DD/MM/YYYY');
+			this.endDate = moment().endOf('month').format('YYYY-MM-DD');
+			this.endDateFormatted = moment().endOf('month').format('DD/MM/YYYY');
+		},
 		/*
 		*  show report
 		*/
@@ -121,6 +153,10 @@ export default{
 		showRevenueReport(){
 			this.revenueDialog = (this.revenueDialog ? false : true);
 		},
+	},
+
+	created(){
+		this.loadData();
 	}
 }
 </script>
@@ -139,7 +175,7 @@ export default{
 	cursor: pointer;
 }
 .pointer:hover{
-	box-shadow: 0 0  4px 3px rgba(0,0,0,0.6);
+	box-shadow: 0 0  4px 3px rgba(0,0,0,0.4);
 }
 
 .grid-container{
@@ -166,7 +202,5 @@ export default{
 	height: 150px !important;
 }
 
-.fix-icon{
-	margin-top: 25px;
-}
+
 </style>
