@@ -5,7 +5,7 @@
 		color="blue darken-3" dark app fixed>
 
 		<v-toolbar-title class="ml-0 pl-3">
-			<span class="hidden-sm-and-down" @click="gotoPage('/home')">Hotel Costa oeste</span> /
+			<span class="hidden-sm-and-down" @click="gotoPage('home')">Hotel Costa oeste</span> /
 			<slot name="app-title"></slot>
 		</v-toolbar-title>
 
@@ -13,11 +13,11 @@
 
 		<slot name="app-picker"></slot>
 
-		<v-btn icon color="white" @click="gotoPage('/')">
+		<v-btn icon color="white" @click="gotoPage('home')">
 			<v-icon color="blue darken-3" >home</v-icon>
 		</v-btn>
 
-		<v-btn icon class="mx-0" color="white" @click="gotoPage('/reports')">
+		<v-btn icon class="mx-0" color="white" @click="gotoPage('reports')">
 			<v-icon color="blue darken-3">attach_money</v-icon>
 		</v-btn>
 

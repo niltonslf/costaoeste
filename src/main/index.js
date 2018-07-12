@@ -19,23 +19,19 @@ function createWindow () {
 	* Initial window options
 	*/
 	mainWindow = new BrowserWindow({
-		height: 563,
+		height: 390,
+		center:true,
 		useContentSize: true,
-		width: 1000
+		width: 438,
 	})
 
 	mainWindow.loadURL(winURL)
+
 
 	mainWindow.on('closed', () => {
 		mainWindow = null
 	})
 }
-
-export function closeWindow(){
-	mainWindow = null
-	app.quit()
-}
-
 
 app.on('ready', createWindow)
 

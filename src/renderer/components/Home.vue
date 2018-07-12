@@ -143,14 +143,14 @@ export default{
 		* Load items from database and show table
 		*/
 		loadRoomList(){
-			this.rooms = this.collection.chain().simplesort('number').data();;
+			this.rooms = database().rooms.chain().simplesort('number').data();;
 			this.checkRoomStatus();
 		},
 		/*
 		*	Find host by room id
 		**/
 		findHost(roomId){
-			return this.hostsCollection.find({'roomId': roomId});
+			return database().hosts.find({'roomId': roomId});
 		},
 		/**
 		* Run and excute child method to save data into database
@@ -189,6 +189,8 @@ export default{
 		this.filterDate = moment().format('YYYY-MM-DD');
 		this.dateFormatted = moment().format('DD/MM/YYYY');
 		this.loadRoomList();
+
+		console.log(this.rooms);
 	}
 }
 </script>
