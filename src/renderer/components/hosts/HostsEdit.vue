@@ -1,6 +1,6 @@
 <template lang="html">
 	<v-layout row wrap >
-		<v-dialog  v-model="modal" width="70%">
+		<v-dialog  v-model="modal" width="80%">
 
 			<v-card>
 				<v-card-title	class="headline grey lighten-2" primary-title>
@@ -10,7 +10,7 @@
 				<v-layout row wrap px-4 py-3>
 					<v-flex xs6>
 						<v-layout row wrap>
-							<v-flex xs6 sm6 md5>
+							<v-flex xs6 sm6 md6>
 								<v-menu ref="pickerCheckin"
 								transition="scale-transition">
 
@@ -21,7 +21,7 @@
 							</v-menu>
 						</v-flex>
 
-						<v-flex xs6 sm6 md5>
+						<v-flex xs6 sm6 md6>
 							<v-menu	ref="pickerCheckout" transition="scale-transition">
 
 								<v-text-field slot="activator" v-model="checkoutFormated" label="Check-out" prepend-icon="event" readonly ></v-text-field>
@@ -30,14 +30,19 @@
 							</v-menu>
 						</v-flex>
 
-						<v-flex xs6 sm6 md6>
+						<v-flex xs5>
 							<v-switch label="Cliente hospedado?" v-model="host.isChecked"></v-switch>
 						</v-flex>
 
+						<v-flex xs7>
+							<v-switch color="red" value input-value="true" label="Hospedagem Finalizada?" v-model="host.isFinished"></v-switch>
+						</v-flex>
+
+
 					</v-layout>
 
-					<v-subheader class="title">Dados do hóspede</v-subheader>
 					<v-layout row wrap>
+						<v-subheader class="title">Dados do hóspede</v-subheader>
 
 						<v-flex xs12>
 							<v-text-field v-model="host.guest.name" label="Nome do hóspede"
@@ -74,10 +79,8 @@
 			<v-divider></v-divider>
 
 			<v-card-actions>
-
-				<div class="">
 					<v-chip color="blue lighten-2" label small class="pa-2 ml-0">
-						<h1 class="title">Hospedagem: <b> {{hostPrice}} R$</b></h1>
+						<h1 class="title">Hospedagem: <b> {{daysHostedPrice}} R$</b></h1>
 					</v-chip>
 
 					<v-chip color="purple lighten-2" label small class="pa-2 ml-0">
@@ -87,9 +90,8 @@
 						<h1 class="title">Total: <b> {{totalPrice}} R$</b></h1>
 					</v-chip>
 
-				</div>
+					<v-spacer></v-spacer>
 
-				<v-spacer></v-spacer>
 				<v-btn @click="submit" color="info">Atualizar</v-btn>
 				<v-btn @click="clear" color="error">Cancelar</v-btn>
 			</v-card-actions>
@@ -121,7 +123,7 @@ export default {
 		hostId: null,
 
 		// prices
-		hostPrice: 0.0,
+		daysHostedPrice: 0.0,
 		consumptionTotalPrice: 0.0,
 		totalPrice:0.0,
 	}),
@@ -174,7 +176,7 @@ export default {
 			let checkinDate = moment(this.host.checkin);
 			let checkoutDate = moment(this.host.checkout);
 			let daysHosted = checkoutDate.diff(checkinDate, 'days');
-			this.hostPrice = roomPrice * daysHosted; // set host price
+			this.daysHostedPrice = roomPrice * daysHosted; // set host price
 
 			this.getTotalPice(); // calc total price to pay
 		},
@@ -182,15 +184,14 @@ export default {
 		*	Get price of
 		*/
 		getTotalPice(){
-			this.totalPrice =  this.consumptionTotalPrice + this.hostPrice;
+			this.totalPrice =  this.consumptionTotalPrice + this.daysHostedPrice;
 		},
 		/*
 		* Save data into database
 		*/
 		submit(){
-			var object = this.collection.findOne({
-				'$loki': this.host.$loki
-			});
+			var object = this.collection.findOne({'$loki': this.host.$loki});
+			console.log(this.host.daysHostedPrice);
 			// set new values into object loaded
 			object.checkedDate = this.host.checkedDate;
 			object.checkin = this.host.checkin;
@@ -200,7 +201,11 @@ export default {
 			object.isFinished = this.host.isFinished;
 			object.meta = this.host.meta;
 			object.roomId = this.host.roomId;
+			object.daysHostedPrice = this.daysHostedPrice
+			object.consumptionTotalPrice = this.consumptionTotalPrice
+			object.totalPrice = this.totalPrice
 			//update
+			console.log(object);
 			this.collection.update(object);
 			//clode modal
 			this.clear();

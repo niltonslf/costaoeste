@@ -49,7 +49,7 @@
 				<span class="label w-100" >
 					<v-icon small>today</v-icon>
 					<span v-if="room.hostData.checkin">
-						Checkin: {{room.hostData.checkin}}
+						Checkin: {{formatDate(room.hostData.checkin)}}
 					</span>
 					<span v-else>
 						Checkin: <b>00/00/0000</b>
@@ -58,7 +58,7 @@
 				<span class="label w-100" >
 					<v-icon small>today</v-icon>
 					<span v-if="room.hostData.checkout">
-						Checkout: {{room.hostData.checkout}}
+						Checkout: {{formatDate(room.hostData.checkout)}}
 					</span>
 					<span v-else>
 						Checkout: <b>00/00/0000</b>
@@ -70,7 +70,7 @@
 </div>
 
 <v-btn fab bottom right color="pink" dark fixed @click.stop="dialog = !dialog">
-	<v-icon>add</v-icon>
+	<v-icon class="fix-icon">add</v-icon>
 </v-btn>
 <v-dialog v-model="dialog" width="800px">
 	<v-card>
@@ -143,7 +143,7 @@ export default{
 		* Load items from database and show table
 		*/
 		loadRoomList(){
-			this.rooms = this.collection.find({});
+			this.rooms = this.collection.chain().simplesort('number').data();;
 			this.checkRoomStatus();
 		},
 		/*
@@ -173,7 +173,7 @@ export default{
 					if (this.filterDate >= hostItem.checkin && this.filterDate <= hostItem.checkout) {
 						if (hostItem.isChecked == false) {
 							room.status = 'orange' // room reserved
-						}else{
+						}else if(hostItem.isChecked == true){
 							room.status = 'red' // room busy
 						}
 						// load room client data
@@ -220,5 +220,9 @@ export default{
 
 .full-height{
 	height: 100% !important;
+}
+
+.fix-icon{
+	margin-top: 25px;
 }
 </style>

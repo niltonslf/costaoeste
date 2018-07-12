@@ -15,10 +15,15 @@ export default new Router({
       name: 'home2',
       component: require('@/components/rooms/Rooms').default,
     },
-    {
+		{
       path: '/room',
       name:'room',
       component: require('@/components/rooms/RoomDetail').default
+    },
+		{
+      path: '/reports',
+      name:'reports',
+      component: require('@/components/reports/Report').default
     },
   ]
 })

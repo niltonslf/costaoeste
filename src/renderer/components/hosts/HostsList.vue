@@ -39,12 +39,6 @@
 					</v-list-tile-action>
 
 					<v-list-tile-action>
-						<v-btn icon class="mx-0" @click="finishHost(host)">
-							<v-icon color="pink">attach_money</v-icon>
-						</v-btn>
-					</v-list-tile-action>
-
-					<v-list-tile-action>
 						<v-btn icon class="mx-0" @click="removeHost(host)">
 							<v-icon color="pink">delete</v-icon>
 						</v-btn>
@@ -121,13 +115,7 @@ export default {
 			this.manageModal();
 			this.hostObject = object;
 		},
-		/*
-		* finish host ,calc price to pay
-		* and change host status to finalized
-		*/
-		finishHost(object){
 
-		},
 		/*
 		* Remove room from list and database
 		*/

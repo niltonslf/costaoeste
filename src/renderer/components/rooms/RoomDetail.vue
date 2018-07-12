@@ -4,7 +4,7 @@
 		<toolbar></toolbar>
 
 		<v-flex xs3>
-			<v-card  :color="(room.status == 'vacant' ? 'green' : room.status)">
+			<v-card  :color="room.status">
 				<v-card-media
 				class="white--text"
 				height="150px"
@@ -90,6 +90,7 @@ export default {
 	methods:{
 		updateList(){
 			this.$refs.list.loadData(); // reload location list
+			this.checkRoomStatus();
 		},
 
 		/*
@@ -119,23 +120,21 @@ export default {
 		/*
 		* Verifiy if room is busy, reserved or free
 		*/
+
 		checkRoomStatus(){
-			let today = new Date().toLocaleDateString('en-GB'); // date being verified
-			let date = today.split('/');
-			let todayFormated = date[2]+"-"+date[1]+"-"+date[0];
-
-			let host = this.findHost(this.room.$loki); // select the room that contains the id in host
-			host.map((hostItem)=>{
-				if (todayFormated >= hostItem.checkin && todayFormated <= hostItem.checkout) {
-					if (hostItem.isChecked == false) {
-						this.room.status = 'orange' // room reserved
-					}else{
-						this.room.status = 'red' // room busy
+			let today = moment().format('YYYY-MM-DD'); // date being verified
+				let host = this.findHost(this.room.$loki); // select the host that contains the room id in atributes
+				this.room.status = 'green'; // reset room status
+				host.map((hostItem)=>{
+					if (today >= hostItem.checkin && today <= hostItem.checkout) {
+						if (hostItem.isChecked == false) {
+							this.room.status = 'orange' // room reserved
+						}else if(hostItem.isChecked == true){
+							this.room.status = 'red' // room busy
+						}
 					}
-				}
-			});
-		},
-
+				}); // end host map
+		}, // end check room status
 	},
 	created(){
 		try {
@@ -144,7 +143,6 @@ export default {
 		} catch (e) {
 			this.$router.push({name:'home'});
 		}
-
 	}
 }
 </script>

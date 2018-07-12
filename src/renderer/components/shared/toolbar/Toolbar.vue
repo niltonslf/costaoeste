@@ -4,20 +4,25 @@
 		:clipped-left="$vuetify.breakpoint.lgAndUp"
 		color="blue darken-3" dark app fixed>
 
-		<v-btn icon @click="gotoPage('/')">
-			<v-icon>home</v-icon>
-		</v-btn>
-
 		<v-toolbar-title class="ml-0 pl-3">
-			<span class="hidden-sm-and-down" @click="gotoPage('/home')">Hotel Costa oeste</span>
+			<span class="hidden-sm-and-down" @click="gotoPage('/home')">Hotel Costa oeste</span> / 
+			<slot name="app-title"></slot>
 		</v-toolbar-title>
 
 		<v-spacer></v-spacer>
 
 		<slot name="app-picker"></slot>
 
-		<v-btn icon>
-			<v-icon>exit_to_app</v-icon>
+		<v-btn icon color="white" @click="gotoPage('/')">
+			<v-icon color="blue darken-3" >home</v-icon>
+		</v-btn>
+
+		<v-btn icon class="mx-0" color="white" @click="gotoPage('/reports')">
+			<v-icon color="blue darken-3">attach_money</v-icon>
+		</v-btn>
+
+		<v-btn icon  color="white" >
+			<v-icon color="blue darken-3">exit_to_app</v-icon>
 		</v-btn>
 	</v-toolbar>
 </div>

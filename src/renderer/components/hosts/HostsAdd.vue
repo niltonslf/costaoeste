@@ -31,56 +31,56 @@
 
 				<v-date-picker no-title v-model="host.checkout" @input="$refs.pickerCheckout.save(host.checkout)"></v-date-picker>
 			</v-menu>
-	</v-flex>
+		</v-flex>
 
-	<v-flex xs3 sm3 md3 offset-md1 pt-4>
-		<v-switch
-		label="Cliente hospedado?"
-		v-model="host.isChecked"
-		></v-switch>
-	</v-flex>
+		<v-flex xs3 sm3 md3 offset-md1 pt-4>
+			<v-switch
+			label="Cliente hospedado?"
+			v-model="host.isChecked"
+			></v-switch>
+		</v-flex>
 
-	<v-flex xs12>
-		<v-subheader class="title">Dados do hóspede</v-subheader>
-		<v-layout row wrap>
+		<v-flex xs12>
+			<v-subheader class="title">Dados do hóspede</v-subheader>
+			<v-layout row wrap>
 
-			<v-flex xs12>
-				<v-text-field v-model="guest.name" label="Nome do hóspede" required></v-text-field>
-			</v-flex>
+				<v-flex xs12>
+					<v-text-field v-model="guest.name" label="Nome do hóspede" required></v-text-field>
+				</v-flex>
 
-			<v-flex xs6>
-				<v-text-field label="(00) - 0000-000" class="input-group--focused" prepend-icon="phone" mask="(nn) nnnnn-nnnn" v-model="guest.tel" single-line ></v-text-field>
-			</v-flex>
+				<v-flex xs6>
+					<v-text-field label="(00) - 0000-000" class="input-group--focused" prepend-icon="phone" mask="(nn) nnnnn-nnnn" v-model="guest.tel" single-line ></v-text-field>
+				</v-flex>
 
-			<v-flex xs6 pl-4>
-				<v-text-field
-				v-model="guest.cpf" :counter="50" label="CPF"
-				required></v-text-field>
-			</v-flex>
+				<v-flex xs6 pl-4>
+					<v-text-field
+					v-model="guest.cpf" :counter="50" label="CPF"
+					required></v-text-field>
+				</v-flex>
 
-			<v-flex xs5>
-				<v-text-field
-				v-model="guest.rg" :counter="50" label="RG"
-				required></v-text-field>
-			</v-flex>
+				<v-flex xs5>
+					<v-text-field
+					v-model="guest.rg" :counter="50" label="RG"
+					required></v-text-field>
+				</v-flex>
 
-			<v-flex xs7 pl-4>
-				<v-text-field
-				v-model="guest.address" :counter="50" label="Endereço"
-				required></v-text-field>
-			</v-flex>
+				<v-flex xs7 pl-4>
+					<v-text-field
+					v-model="guest.address" :counter="50" label="Endereço"
+					required></v-text-field>
+				</v-flex>
 
-		</v-layout>
-	</v-flex>
-</v-layout>
+			</v-layout>
+		</v-flex>
+	</v-layout>
 
-<v-divider></v-divider>
+	<v-divider></v-divider>
 
-<v-card-actions>
-	<v-spacer></v-spacer>
-	<v-btn @click="submit" color="success">Salvar</v-btn>
-	<v-btn @click="clear" color="error">Cancelar</v-btn>
-</v-card-actions>
+	<v-card-actions>
+		<v-spacer></v-spacer>
+		<v-btn @click="submit" color="success">Salvar</v-btn>
+		<v-btn @click="clear" color="error">Cancelar</v-btn>
+	</v-card-actions>
 </v-card>
 </v-dialog>
 
@@ -103,7 +103,9 @@ export default {
 		checkoutFormated: null,
 		pickerCheckout: false,
 		// host data
-		host:{},
+		host:{
+
+		},
 		guest:{},
 	}),
 
@@ -141,6 +143,20 @@ export default {
 		},
 
 		/*
+		* load data
+		*/
+		loadData(){
+			this.collection = database().hosts;
+			this.checkinFormated = moment().format('DD/MM/YYYY');
+			this.checkoutFormated = moment().add(1,'day').format('DD/MM/YYYY');
+			this.host ={
+				checkin:moment().format('YYYY-MM-DD'),
+				checkout:moment().add(1,'day').format('YYYY-MM-DD'),
+				isChecked:false,
+				guest:{},
+			}
+		},
+		/*
 		* Clear form data
 		*/
 		clear(){
@@ -161,10 +177,7 @@ export default {
 	}, // end methods
 
 	created(){
-		this.collection = database().hosts;
-		this.checkinFormated = moment().format('DD/MM/YYYY');
-		this.checkoutFormated = moment().add(1,'day').format('DD/MM/YYYY');
-
+		this.loadData();
 	}
 
 }
