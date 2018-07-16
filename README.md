@@ -1,6 +1,7 @@
 # costaoeste
 
-> An electron-vue project
+> Mini sistema desktop desevolvido com Vuejs + Electron + gambiarra.
+> Sistema desenvolvido para auxiliar o controle de locação de quartos do hotel Costa oeste.
 
 #### Build Setup
 
