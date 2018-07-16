@@ -11,6 +11,7 @@
 				slot="activator"
 				v-model="startDateFormatted"
 				prepend-icon="event"
+				label="Data de inicio"
 				readonly></v-text-field>
 				<v-date-picker v-model="startDate" no-title  @input="$refs.pickerStartStatus.save(startDate)"></v-date-picker>
 			</v-menu>
@@ -24,6 +25,7 @@
 			slot="activator"
 			v-model="endDateFormatted"
 			prepend-icon="event"
+			label="Data de términio"
 			readonly></v-text-field>
 			<v-date-picker v-model="endDate" no-title  @input="$refs.pickerEndStatus.save(endDate)"></v-date-picker>
 		</v-menu>
@@ -50,7 +52,7 @@
 		<v-card color="green full-height darken-2"class="pointer white--text" @click.native="gotoPage('revenue')">
 			<v-card-title primary-title>
 				<h1 class="report-value ">Relatório</h1>
-				<span class="headline w-100">Receita no período</span>
+				<span class="headline w-100">Receitas</span>
 			</v-card-title>
 		</v-card>
 	</v-flex>
