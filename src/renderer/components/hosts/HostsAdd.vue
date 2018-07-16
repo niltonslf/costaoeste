@@ -1,6 +1,6 @@
 <template lang="html">
 	<v-layout row wrap >
-		<v-dialog  v-model="dialog" width="70%">
+		<v-dialog  v-model="dialog" width="90%">
 
 			<v-btn fab bottom right slot="activator" color="blue"
 			dark fixed @click.stop="dialog = !dialog">
@@ -39,6 +39,8 @@
 			v-money="money"
 			label="Preço da diária"
 			required
+			color="red"
+			red
 			></v-text-field>
 		</v-flex>
 

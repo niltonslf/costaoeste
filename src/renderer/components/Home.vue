@@ -206,6 +206,11 @@ export default{
 	margin-top: 2px;
 }
 
+.grid-item .card__title--primary{
+	padding-top: 15px !important;
+	padding-bottom: 13px !important;
+}
+
 .pointer{
 	cursor: pointer;
 }
